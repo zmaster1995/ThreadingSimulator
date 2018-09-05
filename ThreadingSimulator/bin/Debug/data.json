@@ -1,0 +1,240 @@
+[
+  {
+    "Name": "KontrolaPristupa",
+    "Processors": [
+      {
+        "Name": "Thread1",
+        "Blocks": [
+          {
+            "Type": 2
+          },
+          {
+            "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+            "SemaphorName": "sem",
+            "SemaphorOperation": 0,
+            "Type": 0
+          },
+          {
+            "$type": "ThreadingSimulator.Models.VariableBlockModel, ThreadingSimulator",
+            "VariableName": "x",
+            "VariableOperationType": 0,
+            "Value": null,
+            "Type": 1
+          },
+          {
+            "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+            "SemaphorName": "sem",
+            "SemaphorOperation": 1,
+            "Type": 0
+          },
+          {
+            "Type": 2
+          }
+        ]
+      },
+      {
+        "Name": "Thread2",
+        "Blocks": [
+          {
+            "Type": 2
+          },
+          {
+            "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+            "SemaphorName": "sem",
+            "SemaphorOperation": 0,
+            "Type": 0
+          },
+          {
+            "$type": "ThreadingSimulator.Models.VariableBlockModel, ThreadingSimulator",
+            "VariableName": "x",
+            "VariableOperationType": 1,
+            "Value": 5,
+            "Type": 1
+          },
+          {
+            "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+            "SemaphorName": "sem",
+            "SemaphorOperation": 1,
+            "Type": 0
+          },
+          {
+            "Type": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "Name": "Signalizacija",
+    "Processors": [
+      {
+        "Name": "Thread1",
+        "Blocks": [
+          {
+            "Type": 2
+          },
+          {
+            "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+            "SemaphorName": "sem",
+            "SemaphorOperation": 0,
+            "Type": 0
+          },
+          {
+            "Type": 2
+          }
+        ]
+      },
+      {
+        "Name": "Thread2",
+        "Blocks": [
+          {
+            "Type": 2
+          },
+          {
+            "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+            "SemaphorName": "sem",
+            "SemaphorOperation": 1,
+            "Type": 0
+          },
+          {
+            "Type": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "Name": "ConsumerProducer - 1 Buffer",
+    "Processors": [
+      {
+        "Name": "Producer",
+        "Blocks": [
+          {
+            "Type": 2
+          },
+          {
+            "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+            "SemaphorName": "sem1",
+            "SemaphorOperation": 0,
+            "Type": 0
+          },
+          {
+            "$type": "ThreadingSimulator.Models.VariableBlockModel, ThreadingSimulator",
+            "VariableName": "cnt",
+            "VariableOperationType": 2,
+            "Value": 1,
+            "Type": 1
+          },
+          {
+            "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+            "SemaphorName": "sem2",
+            "SemaphorOperation": 1,
+            "Type": 0
+          }
+        ]
+      },
+      {
+        "Name": "Consumer",
+        "Blocks": [
+          {
+            "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+            "SemaphorName": "sem2",
+            "SemaphorOperation": 0,
+            "Type": 0
+          },
+          {
+            "$type": "ThreadingSimulator.Models.VariableBlockModel, ThreadingSimulator",
+            "VariableName": "cnt",
+            "VariableOperationType": 3,
+            "Value": 1,
+            "Type": 1
+          },
+          {
+            "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+            "SemaphorName": "sem1",
+            "SemaphorOperation": 1,
+            "Type": 0
+          },
+          {
+            "Type": 2
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "Name": "ConsumerProducer - Vise bafera",
+    "Processors": [
+      {
+        "Name": "Producer",
+        "Blocks": [
+          {
+            "Type": 2
+          },
+          {
+            "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+            "SemaphorName": "space",
+            "SemaphorOperation": 0,
+            "Type": 0
+          },
+          {
+            "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+            "SemaphorName": "mut",
+            "SemaphorOperation": 0,
+            "Type": 0
+          },
+          {
+            "Type": 2
+          },
+          {
+            "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+            "SemaphorName": "mut",
+            "SemaphorOperation": 1,
+            "Type": 0
+          },
+          {
+            "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+            "SemaphorName": "count",
+            "SemaphorOperation": 1,
+            "Type": 0
+          }
+        ]
+      },
+      {
+        "Name": "Consumer",
+        "Blocks": [
+          {
+            "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+            "SemaphorName": "count",
+            "SemaphorOperation": 0,
+            "Type": 0
+          },
+          {
+            "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+            "SemaphorName": "mut",
+            "SemaphorOperation": 0,
+            "Type": 0
+          },
+          {
+            "Type": 2
+          },
+          {
+            "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+            "SemaphorName": "mut",
+            "SemaphorOperation": 1,
+            "Type": 0
+          },
+          {
+            "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+            "SemaphorName": "space",
+            "SemaphorOperation": 1,
+            "Type": 0
+          },
+          {
+            "Type": 2
+          }
+        ]
+      }
+    ]
+  }
+]
