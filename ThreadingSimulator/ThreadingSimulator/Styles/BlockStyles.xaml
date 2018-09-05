@@ -1,0 +1,405 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:ThreadingSimulator.Styles"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    xmlns:models="clr-namespace:ThreadingSimulator.Enums"
+                    xmlns:converters="clr-namespace:ThreadingSimulator.Converters"
+                    xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
+                    xmlns:extra="http://schemas.xceed.com/wpf/xaml/toolkit">
+
+    <converters:MultivalueParameterConverter x:Key="MultivalueParameterConverter"></converters:MultivalueParameterConverter>
+    <converters:BorderStyleConverter x:Key="BorderStyleConverter"></converters:BorderStyleConverter>
+    <converters:LoopBlockWidthConverter x:Key="LoopBlockWidthConverter"></converters:LoopBlockWidthConverter>
+    <converters:CommandBackgroundConverter x:Key="CommandBackgroundConverter"></converters:CommandBackgroundConverter>
+    <converters:CommandDisplayTextConverter x:Key="CommandDisplayTextConverter"></converters:CommandDisplayTextConverter>
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+
+    <ResourceDictionary x:Key="Resources" Source="BlockStyles.xaml"/>
+
+    <BitmapImage x:Key="Delete" UriSource="../Assets/icons8-waste-48.png"/>
+
+    <ObjectDataProvider x:Key="SemaphorOperationValues"
+                        MethodName="GetValues" 
+                        ObjectType="{x:Type sys:Enum}">
+        <ObjectDataProvider.MethodParameters>
+            <x:Type TypeName="models:SemaphorOperationType"/>
+        </ObjectDataProvider.MethodParameters>
+    </ObjectDataProvider>
+    <ObjectDataProvider x:Key="VariableOperationValues"
+                        MethodName="GetValues" 
+                        ObjectType="{x:Type sys:Enum}">
+        <ObjectDataProvider.MethodParameters>
+            <x:Type TypeName="models:VariableOperationType"/>
+        </ObjectDataProvider.MethodParameters>
+    </ObjectDataProvider>
+
+    <local:BlockTemplateSelector x:Key="TemplateSelector" 
+                                 ResourceDictionary="{StaticResource Resources}">
+    </local:BlockTemplateSelector>
+
+    <local:DraggableBlockTemplateSelector x:Key="DraggableTemplateSelector"  
+                                          ResourceDictionary="{StaticResource Resources}">
+    </local:DraggableBlockTemplateSelector>
+
+    <Style x:Key="ListStyle" 
+           TargetType="ListBox">
+        <Style.Setters>
+            <Setter Property="ItemTemplateSelector" Value="{StaticResource TemplateSelector}"></Setter>
+            <Setter Property="Background" Value="Transparent"></Setter>
+            <Setter Property="BorderBrush" Value="Transparent"></Setter>
+            <Setter Property="BorderThickness" Value="0"></Setter>
+            <Setter Property="Padding" Value="0"></Setter>
+            <Setter Property="Margin" Value="0"></Setter>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="{x:Type ListBoxItem}">
+                        <Style.Setters>
+                            <Setter Property="Padding" Value="0" />
+                            <Setter Property="Margin" Value="0" />
+                            <Setter Property="BorderThickness" Value="0" />
+                        </Style.Setters>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+    
+    <Style x:Key="DraggableBlockStyle" 
+           TargetType="ItemsControl">
+        <Style.Setters>
+            <Setter Property="ItemTemplateSelector" Value="{StaticResource TemplateSelector}"></Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style x:Key="BorderStyle"
+           TargetType="Border">
+        <Style.Setters>
+            <Setter Property="BorderThickness" Value="0"></Setter>
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Tag">
+                <Setter.Value>
+                    <sys:Boolean>True</sys:Boolean>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="CornerRadius">
+                <Setter.Value>
+                    <MultiBinding Converter="{StaticResource BorderStyleConverter}" >
+                        <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}" />
+                        <Binding RelativeSource="{RelativeSource Self}"/>
+                        <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}" Path="Items.Count"/>
+                    </MultiBinding>
+                </Setter.Value>
+            </Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style x:Key="ListBorderStyle"
+           TargetType="Border"
+           BasedOn="{StaticResource BorderStyle}">
+        <Style.Setters>
+            <Setter Property="BorderBrush" Value="White"></Setter>
+            <Setter Property="BorderThickness" Value="2"></Setter>
+            <Setter Property="CornerRadius" Value="10 0 0 10"></Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style x:Key="DraggableBorderStyle"
+           TargetType="Border">
+        <Style.Setters>
+            <Setter Property="CornerRadius" Value="10"></Setter>
+            <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+            <Setter Property="Padding" Value="20 3 20 0"></Setter>
+        </Style.Setters>
+    </Style>
+
+    <Style x:Key="ButtonStyle" TargetType="Button">
+        <Style.Setters>
+            <Setter Property="Background" Value="Transparent"></Setter>
+            <Setter Property="BorderBrush" Value="Transparent"></Setter>
+            <Setter Property="BorderThickness" Value="0"></Setter>
+        </Style.Setters>
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.3" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    
+    <SolidColorBrush x:Key="BlockColor">Green</SolidColorBrush>
+    <SolidColorBrush x:Key="SemaphorBlockColor">Orange</SolidColorBrush>
+    <SolidColorBrush x:Key="VariableBlockColor">OrangeRed</SolidColorBrush>
+    <SolidColorBrush x:Key="LoopBlockColor">Yellow</SolidColorBrush>
+
+    <DataTemplate x:Key="DraggableBlockTemplate">
+        <Border Background="{StaticResource BlockColor}"
+                Style="{StaticResource DraggableBorderStyle}">
+            <TextBlock Text="Commands"
+                       Padding="5"></TextBlock>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate x:Key="DraggableSemaphorBlockTemplate">
+        <Border Background="{StaticResource SemaphorBlockColor}"
+                Style="{StaticResource DraggableBorderStyle}">
+            <TextBlock Text="Semaphor"
+                       Padding="5"></TextBlock>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate x:Key="DraggableLoopBlockTemplate">
+        <Border Background="{StaticResource LoopBlockColor}"
+                Style="{StaticResource DraggableBorderStyle}">
+            <TextBlock Text="Loop"
+                       Padding="5"></TextBlock>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate x:Key="DraggableVariableBlockTemplate">
+        <Border Background="{StaticResource VariableBlockColor}"
+                Style="{StaticResource DraggableBorderStyle}">
+            <TextBlock Text="Shared variable"
+                       Padding="5"></TextBlock>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate x:Key="BlockTemplate">
+        <Grid Background="White">
+            <Border Style="{StaticResource BorderStyle}"
+                    Background="{StaticResource BlockColor}"
+                    Width="145"
+                    HorizontalAlignment="Left">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Block of commands"
+                           Padding="5"
+                           Width="120"></TextBlock>
+                    <Button Width="16"
+                        Height="16"
+                        Margin="0 0 5 0"
+                        Style="{StaticResource ButtonStyle}"
+                        Visibility="{Binding ElementName=Control, Path=DataContext.EditMode, Converter={StaticResource BooleanToVisibilityConverter}}"
+                        Command="{Binding ElementName=Control, Path=DataContext.DeleteBlockCmd}">
+                        <Button.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MultivalueParameterConverter}">
+                                <Binding RelativeSource="{RelativeSource Self}" Path="DataContext"/>
+                                <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ListBox}}" Path="DataContext"/>
+                            </MultiBinding>
+                        </Button.CommandParameter>
+                        <Button.Content>
+                            <Image Source="{StaticResource Delete}"></Image>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="SemaphorBlockTemplate">
+        <Grid Background="White">
+            <Border Style="{StaticResource BorderStyle}"
+                    Background="{StaticResource SemaphorBlockColor}"
+                    Width="210"
+                    HorizontalAlignment="Left">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Margin="5 8 0 0"
+                           Text="Semaphor: "></TextBlock>
+                    <TextBox Margin="10 5 0 5"
+                         Width="30"
+                         IsEnabled="{Binding ElementName=Control, Path=DataContext.EditMode}"
+                         Text="{Binding SemaphorName}"></TextBox>
+                    <ComboBox Margin="10 5 10 5"   
+                          Name="SemaphorOp"
+                          IsEnabled="{Binding ElementName=Control, Path=DataContext.EditMode}"
+                          SelectedItem="{Binding SemaphorOperation}" 
+                          ItemsSource="{Binding Source={StaticResource SemaphorOperationValues}}"></ComboBox>
+                    <Button Width="16"
+                        Height="16"
+                        Visibility="{Binding ElementName=Control, Path=DataContext.EditMode, Converter={StaticResource BooleanToVisibilityConverter}}"
+                        Command="{Binding ElementName=Control, Path=DataContext.DeleteBlockCmd}">
+                        <Button.CommandParameter>
+                            <MultiBinding Converter="{StaticResource MultivalueParameterConverter}">
+                                <Binding RelativeSource="{RelativeSource Self}" Path="DataContext"/>
+                                <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ListBox}}" Path="DataContext"/>
+                            </MultiBinding>
+                        </Button.CommandParameter>
+                        <Button.Content>
+                            <Image Source="{StaticResource Delete}"></Image>
+                        </Button.Content>
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource ButtonStyle}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding SelectedItem, ElementName=SemaphorOp}" Value="{x:Static models:SemaphorOperationType.EXIT}">
+                                        <Setter Property="Margin" Value="12 0 5 0"></Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="VariableBlockTemplate">
+        <Grid Background="White">
+            <Border Style="{StaticResource BorderStyle}"
+                    Background="{StaticResource VariableBlockColor}"
+                    Width="220"
+                    HorizontalAlignment="Left">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="5 7 0 0"
+                               Text="Variable: "></TextBlock>
+                        <TextBox Margin="10 5 0 5"
+                             Width="30"
+                             IsEnabled="{Binding ElementName=Control, Path=DataContext.EditMode}"
+                             Text="{Binding VariableName}"></TextBox>
+                        <ComboBox Margin="10 5 0 5"
+                              Name="VariableOp"
+                              SelectedItem="{Binding VariableOperationType}" 
+                             IsEnabled="{Binding ElementName=Control, Path=DataContext.EditMode}"
+                              ItemsSource="{Binding Source={StaticResource VariableOperationValues}}"></ComboBox>
+                        <Button Width="16"
+                            Height="16"
+                            Visibility="{Binding ElementName=Control, Path=DataContext.EditMode, Converter={StaticResource BooleanToVisibilityConverter}}"
+                            Command="{Binding ElementName=Control, Path=DataContext.DeleteBlockCmd}">
+                            <Button.CommandParameter>
+                                <MultiBinding Converter="{StaticResource MultivalueParameterConverter}">
+                                    <Binding RelativeSource="{RelativeSource Self}" Path="DataContext"/>
+                                    <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ListBox}}" Path="DataContext"/>
+                                </MultiBinding>
+                            </Button.CommandParameter>
+                            <Button.Content>
+                                <Image Source="{StaticResource Delete}"></Image>
+                            </Button.Content>
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource ButtonStyle}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding SelectedItem, ElementName=VariableOp}" Value="{x:Static models:VariableOperationType.GET}">
+                                            <Setter Property="Margin" Value="45 0 5 0"></Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding SelectedItem, ElementName=VariableOp}" Value="{x:Static models:VariableOperationType.SET}">
+                                            <Setter Property="Margin" Value="47 0 5 0"></Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding SelectedItem, ElementName=VariableOp}" Value="{x:Static models:VariableOperationType.INCREASE}">
+                                            <Setter Property="Margin" Value="13 0 5 0"></Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding SelectedItem, ElementName=VariableOp}" Value="{x:Static models:VariableOperationType.DECREASE}">
+                                            <Setter Property="Margin" Value="10 0 5 0"></Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.GET}">
+                                        <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                        <TextBlock Margin="5 7 0 0"
+                               Text="Value: "></TextBlock>
+                        <extra:IntegerUpDown Margin="10 5 0 5"
+                                         Increment="1"
+                                         Width="40"
+                                         IsEnabled="{Binding ElementName=Control, Path=DataContext.EditMode}"
+                                         Value="{Binding Value}"></extra:IntegerUpDown>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="LoopBlockTemplate">
+        <Grid Background="White">
+            <Border Style="{StaticResource BorderStyle}"
+                    Background="{StaticResource LoopBlockColor}"
+                    HorizontalAlignment="Left">
+                <Border.Width>
+                    <MultiBinding Converter="{StaticResource LoopBlockWidthConverter}">
+                        <Binding ElementName="InnerListBox"></Binding>
+                        <Binding ElementName="InnerListBox" Path="ActualHeight"></Binding>
+                    </MultiBinding>
+                </Border.Width>
+                <StackPanel MinWidth="170">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="5 5 0 0"
+                               Text="Iterations:"></TextBlock>
+                        <extra:IntegerUpDown Margin="10 5 0 5"
+                                         Minimum="1"
+                                         Increment="1"
+                                         Width="40"
+                                         IsEnabled="{Binding ElementName=Control, Path=DataContext.EditMode}"
+                                         Value="{Binding Iterations}"></extra:IntegerUpDown>
+                        <Button Width="16"
+                            Height="16"
+                            Margin="50 0 5 0"
+                            Style="{StaticResource ButtonStyle}"
+                            Visibility="{Binding ElementName=Control, Path=DataContext.EditMode, Converter={StaticResource BooleanToVisibilityConverter}}"
+                            Command="{Binding ElementName=Control, Path=DataContext.DeleteBlockCmd}">
+                            <Button.CommandParameter>
+                                <MultiBinding Converter="{StaticResource MultivalueParameterConverter}">
+                                    <Binding RelativeSource="{RelativeSource Self}" Path="DataContext"/>
+                                    <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ListBox}}" Path="DataContext"/>
+                                </MultiBinding>
+                            </Button.CommandParameter>
+                            <Button.Content>
+                                <Image Source="{StaticResource Delete}"></Image>
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
+                    <Border Style="{StaticResource ListBorderStyle}"
+                        Background="White"
+                        Margin="20 0 0 5"
+                        Padding="0 0 5 0">
+                        <ListBox ItemsSource="{Binding Children}"
+                                 Name="InnerListBox"
+                                 dd:DragDrop.DropHandler="{Binding ElementName=Control, Path=DataContext}"
+                                 dd:DragDrop.IsDragSource="{Binding ElementName=Control, Path=DataContext.EditMode}"
+                                 dd:DragDrop.IsDropTarget="True"
+                                 dd:DragDrop.UseDefaultEffectDataTemplate="True"
+                                 MinHeight="15"
+                                 Style="{StaticResource ListStyle}"></ListBox>
+                    </Border>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="CommandDisplayTemplate">
+        <Border x:Name="Border">
+            <Border.Background>
+                <MultiBinding Converter="{StaticResource CommandBackgroundConverter}">
+                    <Binding Path="Type"></Binding>
+                    <Binding Source="{StaticResource Resources}"></Binding>
+                    <Binding ElementName="Border" Path="DataContext.DisplayColor"></Binding>
+                </MultiBinding>
+            </Border.Background>
+            <Border.CornerRadius>
+                <MultiBinding Converter="{StaticResource BorderStyleConverter}" >
+                    <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}" />
+                    <Binding RelativeSource="{RelativeSource Self}"/>
+                    <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}" Path="Items.Count"/>
+                </MultiBinding>
+            </Border.CornerRadius>
+            <Label Content="{Binding Converter={StaticResource CommandDisplayTextConverter}}"
+                   ToolTip="{Binding Converter={StaticResource CommandDisplayTextConverter}}">
+                <Label.Style>
+                    <Style TargetType="Label">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding DisplayColor}" Value="False">
+                                <Setter Property="Foreground" Value="White"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Label.Style>
+            </Label>
+        </Border>
+    </DataTemplate>
+</ResourceDictionary>
