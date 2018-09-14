@@ -8,6 +8,7 @@
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
              xmlns:loaders="clr-namespace:Loaders;assembly=MrMitch.Loaders"
+             xmlns:converters="clr-namespace:ThreadingSimulator.Converters"
              mc:Ignorable="d" 
              x:Name="Control"
              d:DesignHeight="450" d:DesignWidth="800">
@@ -21,7 +22,8 @@
         </ObjectDataProvider>
 
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
-
+        <converters:InvertBooleanConverter x:Key="InvertBooleanConverter"></converters:InvertBooleanConverter>
+        
         <BitmapImage x:Key="Add" UriSource="../Assets/icons8-plus-48.png"/>
         <BitmapImage x:Key="Edit" UriSource="../Assets/icons8-compose-48.png"/>
         <BitmapImage x:Key="Save" UriSource="../Assets/icons8-save-all-48.png"/>
@@ -70,7 +72,8 @@
                      Grid.Column="1"
                      HorizontalContentAlignment="Stretch"
                      ItemsSource="{Binding Programs}"
-                     SelectedItem="{Binding Program}">
+                     SelectedItem="{Binding Program}"
+                     IsEnabled="{Binding EditMode, Converter={StaticResource InvertBooleanConverter}}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid>

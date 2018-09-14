@@ -7,8 +7,8 @@ using ThreadingSimulator.Enums;
 
 namespace ThreadingSimulator.Models
 {
-    public class SemaphoreLogModel : ProcessorLogModel
+    public class ProcessorLogModel : LogModel
     {
-        public string Semaphore { get; set; }
+        public int Processor { get; set; }
     }
 }

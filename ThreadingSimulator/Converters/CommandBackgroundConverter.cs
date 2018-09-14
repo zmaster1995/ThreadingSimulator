@@ -18,12 +18,13 @@ namespace ThreadingSimulator.Converters
             CommandType type = (CommandType)values[0];
             ResourceDictionary resources = values[1] as ResourceDictionary;
             bool active = (bool)values[2];
+            bool simulation = values[3] != DependencyProperty.UnsetValue ? (bool)values[3] : false;
 
-            if(!active)
+            if (!active && simulation)
             {
                 return new SolidColorBrush(Colors.Black)
                 {
-                    Opacity = 0.3
+                    Opacity = 0.2
                 };
             }
 

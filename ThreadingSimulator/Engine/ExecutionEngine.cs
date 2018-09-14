@@ -117,10 +117,18 @@ namespace ThreadingSimulator.Engine
             int value;
             int processorNo;
             CommandModel command;
+            bool deadlock = false;
 
             while (runningProcessorsCount > 0)
             {
-                processorNo = ChooseProcessor();
+                processorNo = ChooseProcessor(ref deadlock);
+
+                if(deadlock)
+                {
+                    AddLog(LogType.ALL_SUSPENDED);
+                    return;
+                }
+
                 command = program.Processors[processorNo].Commands[processorPositions[processorNo]];
                 
                 switch (command.Type)
@@ -215,9 +223,17 @@ namespace ThreadingSimulator.Engine
             return logs;
         }
 
-        private void AddLog(int processorNo, LogType type)
+        private void AddLog(LogType type)
         {
             logs.Add(new LogModel()
+            {
+                Type = type
+            });
+        }
+
+        private void AddLog(int processorNo, LogType type)
+        {
+            logs.Add(new ProcessorLogModel()
             {
                 Processor = processorNo,
                 Type = type
@@ -245,7 +261,7 @@ namespace ThreadingSimulator.Engine
             });
         }
 
-        private int ChooseProcessor()
+        private int ChooseProcessor(ref bool deadlock)
         {
             if(processorsToAwake.Any())
             {
@@ -263,6 +279,12 @@ namespace ThreadingSimulator.Engine
                 }
 
                 return processor;
+            }
+
+            if(!runningProcessors.Any())
+            {
+                deadlock = true;
+                return -1;
             }
 
             while (dispatcherPos < dispatcher.Length)
@@ -283,11 +305,17 @@ namespace ThreadingSimulator.Engine
         {
             Console.WriteLine("---START---");
 
-            foreach (LogModel log in logs)
+            foreach (LogModel logModel in logs)
             {
-                if(log.Type == LogType.GET_VALUE || log.Type == LogType.SET_VALUE || log.Type == LogType.CALC_VALUE)
+                ProcessorLogModel log = logModel as ProcessorLogModel;
+
+                if(logModel.Type == LogType.GET_VALUE || logModel.Type == LogType.SET_VALUE || logModel.Type == LogType.CALC_VALUE)
                 {
                     Console.WriteLine(String.Format("Processor: {0}, Type: {1}, Value: {2}", log.Processor, log.Type, (log as ValuedLogModel).Value));
+                }
+                else if(logModel.Type == LogType.ALL_SUSPENDED)
+                {
+                    Console.WriteLine(String.Format("Type: {0}", logModel.Type));
                 }
                 else
                 {

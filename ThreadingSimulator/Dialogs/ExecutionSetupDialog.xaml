@@ -42,7 +42,7 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Label Content="{Binding Name}"></Label>
+                                    <Label Content="{Binding Name}" Width="80" ToolTip="{Binding Name}"></Label>
                                     <extra:IntegerUpDown Value="{Binding Value}" Minimum="1"></extra:IntegerUpDown>
                                 </StackPanel>
                             </DataTemplate>
@@ -58,7 +58,7 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Label Content="{Binding Name}"></Label>
+                                    <Label Content="{Binding Name}" Width="80" ToolTip="{Binding Name}"></Label>
                                     <extra:IntegerUpDown Value="{Binding Value}" Minimum="0"></extra:IntegerUpDown>
                                 </StackPanel>
                             </DataTemplate>
@@ -74,7 +74,7 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Label Content="{Binding Name}"></Label>
+                                    <Label Content="{Binding Name}" Width="80" ToolTip="{Binding Name}"></Label>
                                     <extra:IntegerUpDown Value="{Binding Value}"></extra:IntegerUpDown>
                                 </StackPanel>
                             </DataTemplate>

@@ -7,7 +7,7 @@ using ThreadingSimulator.Enums;
 
 namespace ThreadingSimulator.Models
 {
-    public class ValuedLogModel : LogModel
+    public class ValuedLogModel : ProcessorLogModel
     {
         public int Value { get; set; }
         public string Variable { get; set; }

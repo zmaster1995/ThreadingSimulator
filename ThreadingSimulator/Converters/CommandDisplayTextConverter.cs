@@ -16,7 +16,7 @@ namespace ThreadingSimulator.Converters
         {
             CommandModel command = value as CommandModel;
 
-            switch(command.Type)
+            switch (command.Type)
             {
                 case CommandType.SEMAPHOR_ENTER:
                     return String.Format("Enter critical region - {0}", command.Variable);

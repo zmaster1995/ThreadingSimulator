@@ -4,8 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ThreadingSimulator.Dialogs"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
+        x:Name="Simulation"
+        WindowState="Maximized"
         Title="Simulation" Height="450" Width="800">
+    <Window.Tag>
+        <sys:Boolean>True</sys:Boolean>
+    </Window.Tag>
     <Window.Resources>
         <BitmapImage x:Key="Run" UriSource="../Assets/icons8-play-64.png"/>
         <BitmapImage x:Key="Previous" UriSource="../Assets/icons8-left-64.png"/>
@@ -107,7 +113,7 @@
                           ItemsSource="{Binding Program.Processors}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid Width="Auto" Columns="{Binding Program.ProcessorCount}" />
+                        <UniformGrid HorizontalAlignment="Center" Width="Auto" Columns="{Binding Program.ProcessorCount}" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
@@ -151,8 +157,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
-                        <Label Content="{Binding Name}"></Label>
-                        <Label Content=":" Margin="-10 0 0 0"></Label>
+                        <Label Width="80" Content="{Binding Name}" ToolTip="{Binding Name}"></Label>
                         <Label Content="{Binding Value}"></Label>
                     </StackPanel>
                 </DataTemplate>
@@ -168,8 +173,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
-                        <Label Content="{Binding Name}"></Label>
-                        <Label Content=":" Margin="-10 0 0 0"></Label>
+                        <Label Width="80" Content="{Binding Name}" ToolTip="{Binding Name}"></Label>
                         <Label Content="{Binding Value}"></Label>
                     </StackPanel>
                 </DataTemplate>

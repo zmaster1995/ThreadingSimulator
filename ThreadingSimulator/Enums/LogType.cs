@@ -16,6 +16,7 @@ namespace ThreadingSimulator.Enums
         CALC_VALUE,
         EXEC_FINISHED,
         ENTER_REGION,
-        EXIT_REGION
+        EXIT_REGION,
+        ALL_SUSPENDED
     }
 }

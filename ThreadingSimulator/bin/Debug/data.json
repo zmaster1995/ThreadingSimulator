@@ -6,29 +6,34 @@
         "Name": "Thread1",
         "Blocks": [
           {
-            "Type": 2
+            "Type": 2,
+            "ZIndex": 0
           },
           {
             "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
             "SemaphorName": "sem",
             "SemaphorOperation": 0,
-            "Type": 0
+            "Type": 0,
+            "ZIndex": 0
           },
           {
             "$type": "ThreadingSimulator.Models.VariableBlockModel, ThreadingSimulator",
             "VariableName": "x",
             "VariableOperationType": 0,
             "Value": null,
-            "Type": 1
+            "Type": 1,
+            "ZIndex": 0
           },
           {
             "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
             "SemaphorName": "sem",
             "SemaphorOperation": 1,
-            "Type": 0
+            "Type": 0,
+            "ZIndex": 0
           },
           {
-            "Type": 2
+            "Type": 2,
+            "ZIndex": 0
           }
         ]
       },
@@ -36,29 +41,34 @@
         "Name": "Thread2",
         "Blocks": [
           {
-            "Type": 2
+            "Type": 2,
+            "ZIndex": 0
           },
           {
             "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
             "SemaphorName": "sem",
             "SemaphorOperation": 0,
-            "Type": 0
+            "Type": 0,
+            "ZIndex": 0
           },
           {
             "$type": "ThreadingSimulator.Models.VariableBlockModel, ThreadingSimulator",
             "VariableName": "x",
             "VariableOperationType": 1,
             "Value": 5,
-            "Type": 1
+            "Type": 1,
+            "ZIndex": 0
           },
           {
             "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
             "SemaphorName": "sem",
             "SemaphorOperation": 1,
-            "Type": 0
+            "Type": 0,
+            "ZIndex": 0
           },
           {
-            "Type": 2
+            "Type": 2,
+            "ZIndex": 0
           }
         ]
       }
@@ -71,16 +81,19 @@
         "Name": "Thread1",
         "Blocks": [
           {
-            "Type": 2
+            "Type": 2,
+            "ZIndex": 0
           },
           {
             "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
             "SemaphorName": "sem",
             "SemaphorOperation": 0,
-            "Type": 0
+            "Type": 0,
+            "ZIndex": 0
           },
           {
-            "Type": 2
+            "Type": 2,
+            "ZIndex": 0
           }
         ]
       },
@@ -88,16 +101,19 @@
         "Name": "Thread2",
         "Blocks": [
           {
-            "Type": 2
+            "Type": 2,
+            "ZIndex": 0
           },
           {
             "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
             "SemaphorName": "sem",
             "SemaphorOperation": 1,
-            "Type": 0
+            "Type": 0,
+            "ZIndex": 0
           },
           {
-            "Type": 2
+            "Type": 2,
+            "ZIndex": 0
           }
         ]
       }
@@ -110,26 +126,30 @@
         "Name": "Producer",
         "Blocks": [
           {
-            "Type": 2
+            "Type": 2,
+            "ZIndex": 0
           },
           {
             "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
             "SemaphorName": "sem1",
             "SemaphorOperation": 0,
-            "Type": 0
+            "Type": 0,
+            "ZIndex": 0
           },
           {
             "$type": "ThreadingSimulator.Models.VariableBlockModel, ThreadingSimulator",
             "VariableName": "cnt",
             "VariableOperationType": 2,
             "Value": 1,
-            "Type": 1
+            "Type": 1,
+            "ZIndex": 0
           },
           {
             "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
             "SemaphorName": "sem2",
             "SemaphorOperation": 1,
-            "Type": 0
+            "Type": 0,
+            "ZIndex": 0
           }
         ]
       },
@@ -140,23 +160,27 @@
             "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
             "SemaphorName": "sem2",
             "SemaphorOperation": 0,
-            "Type": 0
+            "Type": 0,
+            "ZIndex": 0
           },
           {
             "$type": "ThreadingSimulator.Models.VariableBlockModel, ThreadingSimulator",
             "VariableName": "cnt",
             "VariableOperationType": 3,
             "Value": 1,
-            "Type": 1
+            "Type": 1,
+            "ZIndex": 0
           },
           {
             "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
             "SemaphorName": "sem1",
             "SemaphorOperation": 1,
-            "Type": 0
+            "Type": 0,
+            "ZIndex": 0
           },
           {
-            "Type": 2
+            "Type": 2,
+            "ZIndex": 0
           }
         ]
       }
@@ -169,34 +193,40 @@
         "Name": "Producer",
         "Blocks": [
           {
-            "Type": 2
+            "Type": 2,
+            "ZIndex": 0
           },
           {
             "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
             "SemaphorName": "space",
             "SemaphorOperation": 0,
-            "Type": 0
+            "Type": 0,
+            "ZIndex": 0
           },
           {
             "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
             "SemaphorName": "mut",
             "SemaphorOperation": 0,
-            "Type": 0
+            "Type": 0,
+            "ZIndex": 0
           },
           {
-            "Type": 2
+            "Type": 2,
+            "ZIndex": 0
           },
           {
             "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
             "SemaphorName": "mut",
             "SemaphorOperation": 1,
-            "Type": 0
+            "Type": 0,
+            "ZIndex": 0
           },
           {
             "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
             "SemaphorName": "count",
             "SemaphorOperation": 1,
-            "Type": 0
+            "Type": 0,
+            "ZIndex": 0
           }
         ]
       },
@@ -207,31 +237,195 @@
             "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
             "SemaphorName": "count",
             "SemaphorOperation": 0,
-            "Type": 0
+            "Type": 0,
+            "ZIndex": 0
           },
           {
             "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
             "SemaphorName": "mut",
             "SemaphorOperation": 0,
-            "Type": 0
+            "Type": 0,
+            "ZIndex": 0
           },
           {
-            "Type": 2
+            "Type": 2,
+            "ZIndex": 0
           },
           {
             "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
             "SemaphorName": "mut",
             "SemaphorOperation": 1,
-            "Type": 0
+            "Type": 0,
+            "ZIndex": 0
           },
           {
             "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
             "SemaphorName": "space",
             "SemaphorOperation": 1,
-            "Type": 0
+            "Type": 0,
+            "ZIndex": 0
           },
           {
-            "Type": 2
+            "Type": 2,
+            "ZIndex": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "Name": "T",
+    "Processors": [
+      {
+        "Name": "t1",
+        "Blocks": [
+          {
+            "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+            "SemaphorName": "a",
+            "SemaphorOperation": 0,
+            "Type": 0,
+            "ZIndex": 1000
+          },
+          {
+            "Type": 2,
+            "ZIndex": 999
+          },
+          {
+            "$type": "ThreadingSimulator.Models.VariableBlockModel, ThreadingSimulator",
+            "VariableName": "b",
+            "VariableOperationType": 0,
+            "Value": null,
+            "Type": 1,
+            "ZIndex": 998
+          },
+          {
+            "$type": "ThreadingSimulator.Models.LoopBlockModel, ThreadingSimulator",
+            "Iterations": 1,
+            "Children": [
+              {
+                "$type": "ThreadingSimulator.Models.VariableBlockModel, ThreadingSimulator",
+                "VariableName": "b",
+                "VariableOperationType": 0,
+                "Value": null,
+                "Type": 1,
+                "ZIndex": 996
+              },
+              {
+                "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+                "SemaphorName": "a",
+                "SemaphorOperation": 0,
+                "Type": 0,
+                "ZIndex": 995
+              },
+              {
+                "Type": 2,
+                "ZIndex": 994
+              }
+            ],
+            "Type": 3,
+            "ZIndex": 997
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "Name": "v",
+    "Processors": [
+      {
+        "Name": "a",
+        "Blocks": [
+          {
+            "Type": 2,
+            "ZIndex": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "Name": "Deadlock1",
+    "Processors": [
+      {
+        "Name": "Thread",
+        "Blocks": [
+          {
+            "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+            "SemaphorName": "a",
+            "SemaphorOperation": 0,
+            "Type": 0,
+            "ZIndex": 1000
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "Name": "Deadlock2",
+    "Processors": [
+      {
+        "Name": "Thread1",
+        "Blocks": [
+          {
+            "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+            "SemaphorName": "a",
+            "SemaphorOperation": 0,
+            "Type": 0,
+            "ZIndex": 1000
+          },
+          {
+            "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+            "SemaphorName": "b",
+            "SemaphorOperation": 0,
+            "Type": 0,
+            "ZIndex": 999
+          },
+          {
+            "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+            "SemaphorName": "b",
+            "SemaphorOperation": 1,
+            "Type": 0,
+            "ZIndex": 998
+          },
+          {
+            "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+            "SemaphorName": "a",
+            "SemaphorOperation": 1,
+            "Type": 0,
+            "ZIndex": 997
+          }
+        ]
+      },
+      {
+        "Name": "Thread2",
+        "Blocks": [
+          {
+            "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+            "SemaphorName": "b",
+            "SemaphorOperation": 0,
+            "Type": 0,
+            "ZIndex": 1000
+          },
+          {
+            "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+            "SemaphorName": "a",
+            "SemaphorOperation": 0,
+            "Type": 0,
+            "ZIndex": 999
+          },
+          {
+            "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+            "SemaphorName": "a",
+            "SemaphorOperation": 1,
+            "Type": 0,
+            "ZIndex": 998
+          },
+          {
+            "$type": "ThreadingSimulator.Models.SemaphorBlockModel, ThreadingSimulator",
+            "SemaphorName": "b",
+            "SemaphorOperation": 1,
+            "Type": 0,
+            "ZIndex": 997
           }
         ]
       }

@@ -93,9 +93,12 @@
     <Compile Include="Converters\BlockToCommandConverter.cs" />
     <Compile Include="Converters\CommandBackgroundConverter.cs" />
     <Compile Include="Converters\CommandDisplayTextConverter.cs" />
+    <Compile Include="Converters\InvertBooleanConverter.cs" />
     <Compile Include="Converters\LoopBlockWidthConverter.cs" />
     <Compile Include="Converters\MultivalueParameterConverter.cs" />
     <Compile Include="Converters\BorderStyleConverter.cs" />
+    <Compile Include="Converters\PuzzlePlacementHorizontalConverter.cs" />
+    <Compile Include="Converters\PuzzlePlacementVerticalConverter.cs" />
     <Compile Include="Dialogs\ExecutionSetupDialog.xaml.cs">
       <DependentUpon>ExecutionSetupDialog.xaml</DependentUpon>
     </Compile>
@@ -118,11 +121,12 @@
     <Compile Include="Models\CommandModel.cs" />
     <Compile Include="Models\DispatcherValue.cs" />
     <Compile Include="Models\ExecutionSettingsModel.cs" />
+    <Compile Include="Models\LogModel.cs" />
     <Compile Include="Models\SemaphoreLogModel.cs" />
     <Compile Include="Models\ValuedLogModel.cs" />
     <Compile Include="Models\ThreadCountModel.cs" />
     <Compile Include="Models\InitialValueModel.cs" />
-    <Compile Include="Models\LogModel.cs" />
+    <Compile Include="Models\ProcessorLogModel.cs" />
     <Compile Include="Enums\LogType.cs" />
     <Compile Include="Models\LoopBlockModel.cs" />
     <Compile Include="Models\SemaphorBlockModel.cs" />

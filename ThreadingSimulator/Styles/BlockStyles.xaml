@@ -12,6 +12,8 @@
     <converters:LoopBlockWidthConverter x:Key="LoopBlockWidthConverter"></converters:LoopBlockWidthConverter>
     <converters:CommandBackgroundConverter x:Key="CommandBackgroundConverter"></converters:CommandBackgroundConverter>
     <converters:CommandDisplayTextConverter x:Key="CommandDisplayTextConverter"></converters:CommandDisplayTextConverter>
+    <converters:PuzzlePlacementVerticalConverter x:Key="PuzzlePlacementVerticalConverter"></converters:PuzzlePlacementVerticalConverter>
+    <converters:PuzzlePlacementHorizontalConverter x:Key="PuzzlePlacementHorizontalConverter"></converters:PuzzlePlacementHorizontalConverter>
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
 
     <ResourceDictionary x:Key="Resources" Source="BlockStyles.xaml"/>
@@ -58,6 +60,7 @@
                             <Setter Property="Padding" Value="0" />
                             <Setter Property="Margin" Value="0" />
                             <Setter Property="BorderThickness" Value="0" />
+                            <Setter Property="Panel.ZIndex" Value="{Binding ZIndex}"></Setter>
                         </Style.Setters>
                     </Style>
                 </Setter.Value>
@@ -126,11 +129,11 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
-    <SolidColorBrush x:Key="BlockColor">Green</SolidColorBrush>
-    <SolidColorBrush x:Key="SemaphorBlockColor">Orange</SolidColorBrush>
-    <SolidColorBrush x:Key="VariableBlockColor">OrangeRed</SolidColorBrush>
-    <SolidColorBrush x:Key="LoopBlockColor">Yellow</SolidColorBrush>
+
+    <SolidColorBrush x:Key="BlockColor">#27AE60</SolidColorBrush>
+    <SolidColorBrush x:Key="SemaphorBlockColor">#C0392B</SolidColorBrush>
+    <SolidColorBrush x:Key="VariableBlockColor">#2980B9</SolidColorBrush>
+    <SolidColorBrush x:Key="LoopBlockColor">#8E44AD</SolidColorBrush>
 
     <DataTemplate x:Key="DraggableBlockTemplate">
         <Border Background="{StaticResource BlockColor}"
@@ -169,8 +172,28 @@
             <Border Style="{StaticResource BorderStyle}"
                     Background="{StaticResource BlockColor}"
                     Width="145"
+                    Padding="0 5 0 0"
                     HorizontalAlignment="Left">
                 <StackPanel Orientation="Horizontal">
+                    <Canvas>
+                        <Canvas.LayoutTransform>
+                            <TransformGroup>
+                                <RotateTransform CenterX="0.5" CenterY="0.5" Angle="180"/>
+                                <ScaleTransform ScaleX="0.6" ScaleY="0.6"></ScaleTransform>
+                            </TransformGroup>
+                        </Canvas.LayoutTransform>
+                        <Ellipse xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="-40" Width="23.8" Canvas.Top="-45" Height="23.5" Name="path3684" Fill="{StaticResource BlockColor}" StrokeThickness="0.26458332"/>
+                        <Path Fill="{StaticResource BlockColor}" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="41.8" Canvas.Top="-193.7" Name="path3720" StrokeLineJoin="Miter" StrokeStartLineCap="Flat" StrokeEndLineCap="Flat">
+                            <Path.Data>
+                                <PathGeometry Figures="m -80.453499 164.96885 c 0 0 6.280833 8.55263 0 11.8935 -6.280835 3.34086 20.713388 1.20271 15.902538 -4.94449" FillRule="NonZero"/>
+                            </Path.Data>
+                        </Path>
+                        <Path Fill="{StaticResource BlockColor}" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="41.8" Canvas.Top="-193.7" Name="path37201" StrokeLineJoin="Miter" StrokeStartLineCap="Flat" StrokeEndLineCap="Flat">
+                            <Path.Data>
+                                <PathGeometry Figures="m -58.921074 164.8905 c 0 0 -6.280833 8.55263 0 11.8935 6.280835 3.34086 -20.713388 1.20271 -15.902538 -4.94449" FillRule="NonZero"/>
+                            </Path.Data>
+                        </Path>
+                    </Canvas>
                     <TextBlock Text="Block of commands"
                            Padding="5"
                            Width="120"></TextBlock>
@@ -200,8 +223,28 @@
             <Border Style="{StaticResource BorderStyle}"
                     Background="{StaticResource SemaphorBlockColor}"
                     Width="210"
+                    Padding="0 5 0 0"
                     HorizontalAlignment="Left">
                 <StackPanel Orientation="Horizontal">
+                    <Canvas>
+                        <Canvas.LayoutTransform>
+                            <TransformGroup>
+                                <RotateTransform CenterX="0.5" CenterY="0.5" Angle="180"/>
+                                <ScaleTransform ScaleX="0.6" ScaleY="0.6"></ScaleTransform>
+                            </TransformGroup>
+                        </Canvas.LayoutTransform>
+                        <Ellipse xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="-40" Width="23.8" Canvas.Top="-50" Height="23.5" Name="path3684" Fill="{StaticResource SemaphorBlockColor}" StrokeThickness="0.26458332"/>
+                        <Path Fill="{StaticResource SemaphorBlockColor}" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="41.8" Canvas.Top="-198.7" Name="path3720" StrokeLineJoin="Miter" StrokeStartLineCap="Flat" StrokeEndLineCap="Flat">
+                            <Path.Data>
+                                <PathGeometry Figures="m -80.453499 164.96885 c 0 0 6.280833 8.55263 0 11.8935 -6.280835 3.34086 20.713388 1.20271 15.902538 -4.94449" FillRule="NonZero"/>
+                            </Path.Data>
+                        </Path>
+                        <Path Fill="{StaticResource SemaphorBlockColor}" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="41.8" Canvas.Top="-198.7" Name="path37201" StrokeLineJoin="Miter" StrokeStartLineCap="Flat" StrokeEndLineCap="Flat">
+                            <Path.Data>
+                                <PathGeometry Figures="m -58.921074 164.8905 c 0 0 -6.280833 8.55263 0 11.8935 6.280835 3.34086 -20.713388 1.20271 -15.902538 -4.94449" FillRule="NonZero"/>
+                            </Path.Data>
+                        </Path>
+                    </Canvas>
                     <TextBlock Margin="5 8 0 0"
                            Text="Semaphor: "></TextBlock>
                     <TextBox Margin="10 5 0 5"
@@ -246,8 +289,83 @@
             <Border Style="{StaticResource BorderStyle}"
                     Background="{StaticResource VariableBlockColor}"
                     Width="220"
+                    Padding="0 5 0 0"
                     HorizontalAlignment="Left">
                 <StackPanel>
+                    <Canvas>
+                        <Canvas.LayoutTransform>
+                            <TransformGroup>
+                                <RotateTransform CenterX="0.5" CenterY="0.5" Angle="180"/>
+                                <ScaleTransform ScaleX="0.6" ScaleY="0.6"></ScaleTransform>
+                            </TransformGroup>
+                        </Canvas.LayoutTransform>
+                        <Ellipse xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="142" Width="23.8" Height="23.5" Name="path3684" Fill="{StaticResource VariableBlockColor}" StrokeThickness="0.26458332">
+                            <Ellipse.Style>
+                                <Style TargetType="Ellipse">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.GET}">
+                                            <Setter Property="Canvas.Top" Value="-77"></Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.SET}">
+                                            <Setter Property="Canvas.Top" Value="-127"></Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.INCREASE}">
+                                            <Setter Property="Canvas.Top" Value="-127"></Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.DECREASE}">
+                                            <Setter Property="Canvas.Top" Value="-127"></Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Ellipse.Style>
+                        </Ellipse>
+                        <Path Fill="{StaticResource VariableBlockColor}" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="224" Name="path3720" StrokeLineJoin="Miter" StrokeStartLineCap="Flat" StrokeEndLineCap="Flat">
+                            <Path.Style>
+                                <Style TargetType="Path">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.GET}">
+                                            <Setter Property="Canvas.Top" Value="-225.7"></Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.SET}">
+                                            <Setter Property="Canvas.Top" Value="-275.7"></Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.INCREASE}">
+                                            <Setter Property="Canvas.Top" Value="-275.7"></Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.DECREASE}">
+                                            <Setter Property="Canvas.Top" Value="-275.7"></Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Path.Style>
+                            <Path.Data>
+                                <PathGeometry Figures="m -80.453499 164.96885 c 0 0 6.280833 8.55263 0 11.8935 -6.280835 3.34086 20.713388 1.20271 15.902538 -4.94449" FillRule="NonZero"/>
+                            </Path.Data>
+                        </Path>
+                        <Path Fill="{StaticResource VariableBlockColor}" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="224" Name="path37201" StrokeLineJoin="Miter" StrokeStartLineCap="Flat" StrokeEndLineCap="Flat">
+                            <Path.Style>
+                                <Style TargetType="Path">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.GET}">
+                                            <Setter Property="Canvas.Top" Value="-225.7"></Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.SET}">
+                                            <Setter Property="Canvas.Top" Value="-275.7"></Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.INCREASE}">
+                                            <Setter Property="Canvas.Top" Value="-275.7"></Setter>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.DECREASE}">
+                                            <Setter Property="Canvas.Top" Value="-275.7"></Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Path.Style>
+                            <Path.Data>
+                                <PathGeometry Figures="m -58.921074 164.8905 c 0 0 -6.280833 8.55263 0 11.8935 6.280835 3.34086 -20.713388 1.20271 -15.902538 -4.94449" FillRule="NonZero"/>
+                            </Path.Data>
+                        </Path>
+                    </Canvas>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Margin="5 7 0 0"
                                Text="Variable: "></TextBlock>
@@ -320,7 +438,9 @@
         <Grid Background="White">
             <Border Style="{StaticResource BorderStyle}"
                     Background="{StaticResource LoopBlockColor}"
-                    HorizontalAlignment="Left">
+                    HorizontalAlignment="Left"
+                    Padding="0 5 0 0"
+                    x:Name="Border">
                 <Border.Width>
                     <MultiBinding Converter="{StaticResource LoopBlockWidthConverter}">
                         <Binding ElementName="InnerListBox"></Binding>
@@ -328,17 +448,95 @@
                     </MultiBinding>
                 </Border.Width>
                 <StackPanel MinWidth="170">
-                    <StackPanel Orientation="Horizontal">
+                    <Canvas Width="0" Height="0">
+                        <Canvas.LayoutTransform>
+                            <TransformGroup>
+                                <RotateTransform CenterX="0.5" CenterY="0.5" Angle="180"/>
+                                <ScaleTransform ScaleX="0.6" ScaleY="0.6"></ScaleTransform>
+                            </TransformGroup>
+                        </Canvas.LayoutTransform>
+                        <Ellipse xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  Width="23.8" Height="23.5" Name="path3684" Fill="{StaticResource LoopBlockColor}" StrokeThickness="0.26458332">
+                            <Ellipse.Style>
+                                <Style TargetType="Ellipse">
+                                    <Setter Property="Canvas.Top">
+                                        <Setter.Value>
+                                            <MultiBinding Converter="{StaticResource PuzzlePlacementVerticalConverter}">
+                                                <Binding ElementName="InnerListBox" Path="ActualHeight"></Binding>
+                                                <Binding ElementName="Border" Path="Tag"></Binding>
+                                            </MultiBinding>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="Canvas.Left">
+                                        <Setter.Value>
+                                            <MultiBinding Converter="{StaticResource PuzzlePlacementHorizontalConverter}">
+                                                <Binding ElementName="Border" Path="ActualWidth"></Binding>
+                                                <Binding ElementName="Border" Path="Tag"></Binding>
+                                            </MultiBinding>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Ellipse.Style>
+                        </Ellipse>
+                        <Path Fill="{StaticResource LoopBlockColor}" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Name="path3720" StrokeLineJoin="Miter" StrokeStartLineCap="Flat" StrokeEndLineCap="Flat">
+                            <Path.Style>
+                                <Style TargetType="Path">
+                                    <Setter Property="Canvas.Top">
+                                        <Setter.Value>
+                                            <MultiBinding Converter="{StaticResource PuzzlePlacementVerticalConverter}">
+                                                <Binding ElementName="InnerListBox" Path="ActualHeight"></Binding>
+                                            </MultiBinding>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="Canvas.Left">
+                                        <Setter.Value>
+                                            <MultiBinding Converter="{StaticResource PuzzlePlacementHorizontalConverter}">
+                                                <Binding ElementName="Border" Path="ActualWidth"></Binding>
+                                            </MultiBinding>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Path.Style>
+                            <Path.Data>
+                                <PathGeometry Figures="m -80.453499 164.96885 c 0 0 6.280833 8.55263 0 11.8935 -6.280835 3.34086 20.713388 1.20271 15.902538 -4.94449" FillRule="NonZero"/>
+                            </Path.Data>
+                        </Path>
+                        <Path Fill="{StaticResource LoopBlockColor}" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Name="path37201" StrokeLineJoin="Miter" StrokeStartLineCap="Flat" StrokeEndLineCap="Flat">
+                            <Path.Style>
+                                <Style TargetType="Path">
+                                    <Setter Property="Canvas.Top">
+                                        <Setter.Value>
+                                            <MultiBinding Converter="{StaticResource PuzzlePlacementVerticalConverter}">
+                                                <Binding ElementName="InnerListBox" Path="ActualHeight"></Binding>
+                                            </MultiBinding>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="Canvas.Left">
+                                        <Setter.Value>
+                                            <MultiBinding Converter="{StaticResource PuzzlePlacementHorizontalConverter}">
+                                                <Binding ElementName="Border" Path="ActualWidth"></Binding>
+                                            </MultiBinding>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Path.Style>
+                            <Path.Data>
+                                <PathGeometry Figures="m -58.921074 164.8905 c 0 0 -6.280833 8.55263 0 11.8935 6.280835 3.34086 -20.713388 1.20271 -15.902538 -4.94449" FillRule="NonZero"/>
+                            </Path.Data>
+                        </Path>
+                    </Canvas>
+                    <Grid>
                         <TextBlock Margin="5 5 0 0"
                                Text="Iterations:"></TextBlock>
-                        <extra:IntegerUpDown Margin="10 5 0 5"
+                        <extra:IntegerUpDown Margin="70 5 0 5"
                                          Minimum="1"
                                          Increment="1"
                                          Width="40"
+                                         HorizontalAlignment="Left"
                                          IsEnabled="{Binding ElementName=Control, Path=DataContext.EditMode}"
                                          Value="{Binding Iterations}"></extra:IntegerUpDown>
                         <Button Width="16"
                             Height="16"
+                            HorizontalAlignment="Right"
                             Margin="50 0 5 0"
                             Style="{StaticResource ButtonStyle}"
                             Visibility="{Binding ElementName=Control, Path=DataContext.EditMode, Converter={StaticResource BooleanToVisibilityConverter}}"
@@ -353,12 +551,32 @@
                                 <Image Source="{StaticResource Delete}"></Image>
                             </Button.Content>
                         </Button>
-                    </StackPanel>
+                    </Grid>
                     <Border Style="{StaticResource ListBorderStyle}"
                         Background="White"
-                        Margin="20 0 0 5"
+                        Margin="20 0 0 10"
                         Padding="0 0 5 0">
-                        <ListBox ItemsSource="{Binding Children}"
+                        <StackPanel>
+                            <!--<Canvas Panel.ZIndex="{Binding ZIndex}">
+                                <Canvas.LayoutTransform>
+                                    <TransformGroup>
+                                        <RotateTransform CenterX="0.5" CenterY="0.5" Angle="180"/>
+                                        <ScaleTransform ScaleX="0.6" ScaleY="0.6"></ScaleTransform>
+                                    </TransformGroup>
+                                </Canvas.LayoutTransform>
+                                <Ellipse xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="80" Width="23.8" Canvas.Top="-20" Height="23.5" Name="path3121684" Fill="{StaticResource LoopBlockColor}" StrokeThickness="0.26458332"/>
+                                <Path Fill="{StaticResource LoopBlockColor}" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="161.8" Canvas.Top="-168.7" Name="path32720" StrokeLineJoin="Miter" StrokeStartLineCap="Flat" StrokeEndLineCap="Flat">
+                                    <Path.Data>
+                                        <PathGeometry Figures="m -80.453499 164.96885 c 0 0 6.280833 8.55263 0 11.8935 -6.280835 3.34086 20.713388 1.20271 15.902538 -4.94449" FillRule="NonZero"/>
+                                    </Path.Data>
+                                </Path>
+                                <Path Fill="{StaticResource LoopBlockColor}" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="161.8" Canvas.Top="-168.7" Name="path373201" StrokeLineJoin="Miter" StrokeStartLineCap="Flat" StrokeEndLineCap="Flat">
+                                    <Path.Data>
+                                        <PathGeometry Figures="m -58.921074 164.8905 c 0 0 -6.280833 8.55263 0 11.8935 6.280835 3.34086 -20.713388 1.20271 -15.902538 -4.94449" FillRule="NonZero"/>
+                                    </Path.Data>
+                                </Path>
+                            </Canvas>-->
+                            <ListBox ItemsSource="{Binding Children}"
                                  Name="InnerListBox"
                                  dd:DragDrop.DropHandler="{Binding ElementName=Control, Path=DataContext}"
                                  dd:DragDrop.IsDragSource="{Binding ElementName=Control, Path=DataContext.EditMode}"
@@ -366,6 +584,7 @@
                                  dd:DragDrop.UseDefaultEffectDataTemplate="True"
                                  MinHeight="15"
                                  Style="{StaticResource ListStyle}"></ListBox>
+                        </StackPanel>
                     </Border>
                 </StackPanel>
             </Border>
@@ -373,24 +592,26 @@
     </DataTemplate>
 
     <DataTemplate x:Key="CommandDisplayTemplate">
-        <Border x:Name="Border">
+        <Border x:Name="Border" CornerRadius="10">
             <Border.Background>
                 <MultiBinding Converter="{StaticResource CommandBackgroundConverter}">
                     <Binding Path="Type"></Binding>
                     <Binding Source="{StaticResource Resources}"></Binding>
                     <Binding ElementName="Border" Path="DataContext.DisplayColor"></Binding>
+                    <Binding ElementName="Simulation" Path="Tag"></Binding>
                 </MultiBinding>
             </Border.Background>
-            <Border.CornerRadius>
+            <!--<Border.CornerRadius>
                 <MultiBinding Converter="{StaticResource BorderStyleConverter}" >
                     <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}" />
                     <Binding RelativeSource="{RelativeSource Self}"/>
                     <Binding RelativeSource="{RelativeSource FindAncestor, AncestorType={x:Type ItemsControl}}" Path="Items.Count"/>
                 </MultiBinding>
-            </Border.CornerRadius>
+            </Border.CornerRadius>-->
             <Label Content="{Binding Converter={StaticResource CommandDisplayTextConverter}}"
-                   ToolTip="{Binding Converter={StaticResource CommandDisplayTextConverter}}">
-                <Label.Style>
+                   ToolTip="{Binding Converter={StaticResource CommandDisplayTextConverter}}"
+                   Foreground="White">
+                <!--<Label.Style>
                     <Style TargetType="Label">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding DisplayColor}" Value="False">
@@ -398,7 +619,7 @@
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
-                </Label.Style>
+                </Label.Style>-->
             </Label>
         </Border>
     </DataTemplate>

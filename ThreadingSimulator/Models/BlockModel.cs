@@ -15,6 +15,22 @@ namespace ThreadingSimulator.Models
     {
         public BlockType Type { get; }
 
+        #region Display
+        private int zIndex;
+        public int ZIndex
+        {
+            get
+            {
+                return zIndex;
+            }
+            set
+            {
+                zIndex = value;
+                OnPropertyChanged();
+            }
+        }
+        #endregion
+
         [XmlIgnore]
         [JsonIgnore]
         public virtual bool IsValid

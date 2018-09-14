@@ -52,6 +52,27 @@ namespace ThreadingSimulator.Models
             }
 
             Children.Insert(position, block);
+
+            RecalculateZIndex();
         }
+
+        public void RecalculateZIndex()
+        {
+            int zIndex = ZIndex-1;
+
+            if(Children != null)
+            {
+                foreach (BlockModel bm in Children)
+                {
+                    bm.ZIndex = zIndex--;
+
+                    if (bm is LoopBlockModel)
+                    {
+                        (bm as LoopBlockModel).RecalculateZIndex();
+                    }
+                }
+            }
+        }
+
     }
 }

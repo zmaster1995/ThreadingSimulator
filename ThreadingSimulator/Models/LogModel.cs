@@ -9,7 +9,6 @@ namespace ThreadingSimulator.Models
 {
     public class LogModel
     {
-        public int Processor { get; set; }
         public LogType Type { get; set; }
     }
 }

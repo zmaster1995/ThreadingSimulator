@@ -48,6 +48,23 @@ namespace ThreadingSimulator.Models
             }
 
             Blocks.Insert(position, command);
+
+            RecalculateZIndex();
+        }
+
+        private void RecalculateZIndex()
+        {
+            int zIndex = 1000;
+
+            foreach(BlockModel bm in Blocks)
+            {
+                bm.ZIndex = zIndex--;
+
+                if(bm is LoopBlockModel)
+                {
+                    (bm as LoopBlockModel).RecalculateZIndex();
+                }
+            }
         }
 
         public void AddRange(List<BlockModel> commands)
