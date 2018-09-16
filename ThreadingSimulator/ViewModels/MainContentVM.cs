@@ -31,6 +31,14 @@ namespace ThreadingSimulator.ViewModels
         private bool busy;
         private ProgramModel backup;
 
+        public string ModeIndicator
+        {
+            get
+            {
+                return EditMode ? "Edit" : "Normal";
+            }
+        }
+
         public bool CanRun
         {
             get
@@ -78,6 +86,7 @@ namespace ThreadingSimulator.ViewModels
                 editMode = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CanRun));
+                OnPropertyChanged(nameof(ModeIndicator));
             }
         }
         public ProgramModel Program
@@ -114,8 +123,8 @@ namespace ThreadingSimulator.ViewModels
             }
         }
 
-        public ICommand AddThreadCmd => new DelegateCommand(AddThreadCmd_Execute);
-        public ICommand DeleteThreadCmd => new DelegateCommand(DeleteThreadCmd_Execute);
+        public ICommand AddProcessCmd => new DelegateCommand(AddProcessCmd_Execute, AddProcessCmd_CanExecute);
+        public ICommand DeleteProcessCmd => new DelegateCommand(DeleteProcessCmd_Execute);
         public ICommand DeleteBlockCmd => new DelegateCommand(DeleteBlockCmd_Execute);
         public ICommand AddCmd => new DelegateCommand(AddCmd_Execute, AddCmd_CanExecute);
         public ICommand EditCmd => new DelegateCommand(EditCmd_Execute, EditCmd_CanExecute);
@@ -124,6 +133,11 @@ namespace ThreadingSimulator.ViewModels
         public ICommand DeleteCmd => new DelegateCommand(DeleteCmd_Execute, DeleteCmd_CanExecute);
         public ICommand RunCmd => new DelegateCommand(RunCmd_Execute, RunCmd_CanExecute);
         public ICommand PreviewCmd => new DelegateCommand(PreviewCmd_Execute);
+
+        private bool AddProcessCmd_CanExecute(object o)
+        {
+            return program != null && program.ProcessCount < 9;
+        }
 
         private async void PreviewCmd_Execute(object o)
         {
@@ -142,7 +156,7 @@ namespace ThreadingSimulator.ViewModels
             BlockModel block = parameters[0] as BlockModel;
             ObservableCollection<BlockModel> blocks=null;
 
-            if (parameters[1] is ProcessorBlocksModel pbm)
+            if (parameters[1] is ProcessBlocksModel pbm)
             {
                 blocks = pbm.Blocks;
             }
@@ -171,14 +185,14 @@ namespace ThreadingSimulator.ViewModels
             return !EditMode;
         }
 
-        private void AddThreadCmd_Execute(object o)
+        private void AddProcessCmd_Execute(object o)
         {
-            Program.Add(new ProcessorBlocksModel());
+            Program.Add(new ProcessBlocksModel());
         }
 
-        private void DeleteThreadCmd_Execute(object o)
+        private void DeleteProcessCmd_Execute(object o)
         {
-            Program.Processors.Remove(o as ProcessorBlocksModel);
+            Program.Processes.Remove(o as ProcessBlocksModel);
         }
 
         private void AddCmd_Execute(object o)
@@ -317,11 +331,11 @@ namespace ThreadingSimulator.ViewModels
                 BlockModel block = dropInfo.Data as BlockModel;
 
                 LoopBlockModel loopBlock = listBox.DataContext as LoopBlockModel;
-                ProcessorBlocksModel processorBlocks = listBox.DataContext as ProcessorBlocksModel;
+                ProcessBlocksModel processBlocks = listBox.DataContext as ProcessBlocksModel;
 
                 if (block != null 
                     && ((loopBlock!=null && loopBlock.Children!=null && loopBlock.Children.Contains(block))
-                    || (processorBlocks != null && processorBlocks.Blocks!=null && processorBlocks.Blocks.Contains(block))))
+                    || (processBlocks != null && processBlocks.Blocks!=null && processBlocks.Blocks.Contains(block))))
                 {
                     dropInfo.Effects = DragDropEffects.Move;
                     dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
@@ -367,13 +381,13 @@ namespace ThreadingSimulator.ViewModels
 
                 if(block != null)
                 {
-                    if (listBox.DataContext is ProcessorBlocksModel processorBlocks)
+                    if (listBox.DataContext is ProcessBlocksModel processBlocks)
                     {
-                        processorBlocks.Add(block, dropInfo.InsertIndex);
+                        processBlocks.Add(block, dropInfo.InsertIndex);
 
-                        if(original != null && processorBlocks.Blocks.Contains(original))
+                        if(original != null && processBlocks.Blocks.Contains(original))
                         {
-                            processorBlocks.Blocks.Remove(original);
+                            processBlocks.Blocks.Remove(original);
                         }
                     }
                     else if (listBox.DataContext is LoopBlockModel loopBlock)

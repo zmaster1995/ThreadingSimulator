@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Threading;
+using ThreadingSimulator.Converters;
 using ThreadingSimulator.Dialogs;
 using ThreadingSimulator.Enums;
 using ThreadingSimulator.Models;
@@ -21,16 +26,30 @@ namespace ThreadingSimulator.ViewModels
         private List<InitialValueModel> variableValues;
         private List<InitialValueModel> semaphoreValue;
         private ExecutableProgramModel program;
-        private List<LogModel> logs;
+        private List<BaseLogModel> logs;
         private bool timerIsRunning;
         private int currentLog;
-        private Timer timer;
+        private System.Timers.Timer timer;
         private Dictionary<string, List<int>> previousValues;
-        private int[] processorPositions;
-        //private bool[] wasSuspended;
+        private int[] processPositions;
+        private ObservableCollection<PrintedLogModel> logOutput;
+        private bool[] isSuspended;
+        
+        public Action Close;
+        public bool NewSimulation { get; set; }
 
-        public Action Redraw;
-
+        public bool[] IsSuspended
+        {
+            get
+            {
+                return isSuspended;
+            }
+            set
+            {
+                isSuspended = value;
+                OnPropertyChanged();
+            }
+        }
         public ExecutableProgramModel Program
         {
             get
@@ -82,29 +101,16 @@ namespace ThreadingSimulator.ViewModels
             }
         }
 
-        public string LogOutput
+        public ObservableCollection<PrintedLogModel> LogOutput
         {
             get
             {
-                StringBuilder sb = new StringBuilder();
-
-                for (int i = 0; i < Math.Min(CurrentLog + 1, logs.Count); i++) 
-                {
-                    if(i!=0)
-                    {
-                        sb.AppendLine();
-                    }
-
-                    sb.AppendLine(GenerateLogOutputText(logs[i]));
-                }
-
-                if (CurrentLog == logs.Count)
-                {
-                    sb.AppendLine();
-                    sb.AppendLine("---Simulation finished---");
-                }
-                
-                return sb.ToString();
+                return logOutput;
+            }
+            set
+            {
+                logOutput = value;
+                OnPropertyChanged();
             }
         }
 
@@ -113,83 +119,145 @@ namespace ThreadingSimulator.ViewModels
         public ICommand ResetSimulationCmd => new DelegateCommand(ResetSimulationCmd_Execute, ResetSimulationCmd_CanExecute);
         public ICommand NextLogCmd => new DelegateCommand(NextLogCmd_Execute, NextLogCmd_CanExecute);
         public ICommand PreviousLogCmd => new DelegateCommand(PreviousLogCmd_Execute, PreviousLogCmd_CanExecute);
+        public ICommand ExportCmd => new DelegateCommand(ExportCmd_Execute);
+        public ICommand NewSimulationCmd => new DelegateCommand(NewSimulationCmd_Execute);
 
-        public string GenerateLogOutputText(LogModel logModel)
+        private void NewSimulationCmd_Execute(object o)
         {
-            StringBuilder sb;
-            ValuedLogModel valuedLog;
-            SemaphoreLogModel semaphoreLog;
+            NewSimulation = true;
+            Close?.Invoke();
+        }
 
-            ProcessorLogModel log = logModel as ProcessorLogModel;
+        private void ExportCmd_Execute(object o)
+        {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            
 
-            switch (logModel.Type)
+            if(fbd.ShowDialog() == DialogResult.OK)
             {
-                case LogType.MOVE:
-                    return String.Format("Processor {0} executed command and moved", log.Processor + 1);
-                case LogType.ENTER_REGION:
-                    semaphoreLog = log as SemaphoreLogModel;
-                    sb = new StringBuilder();
-
-                    sb.AppendLine(String.Format("Processor {0} executed command and moved", log.Processor + 1));
-                    sb.Append(String.Format("###Procesor {0} entered critical region {1}###", semaphoreLog.Processor + 1, semaphoreLog.Semaphore));
-
-                    return sb.ToString();
-                case LogType.EXIT_REGION:
-                    semaphoreLog = log as SemaphoreLogModel;
-                    sb = new StringBuilder();
-
-                    sb.AppendLine(String.Format("Processor {0} executed command and moved", log.Processor + 1));
-                    sb.Append(String.Format("###Procesor {0} exited critical region {1}###", semaphoreLog.Processor + 1, semaphoreLog.Semaphore));
-
-                    return sb.ToString();
-                case LogType.GET_VALUE:
-                    valuedLog = log as ValuedLogModel;
-                    sb = new StringBuilder();
-
-                    sb.AppendLine(String.Format("Processor {0} executed command and moved", log.Processor + 1));
-                    sb.Append(String.Format("~~~Value of variable {0} which processor {1} posses is {2}~~~", valuedLog.Variable, valuedLog.Processor + 1, valuedLog.Value));
-
-                    return sb.ToString();
-                case LogType.SET_VALUE:
-                    valuedLog = log as ValuedLogModel;
-                    sb = new StringBuilder();
-
-                    sb.AppendLine(String.Format("Processor {0} executed command and moved", log.Processor + 1));
-                    sb.Append(String.Format("~~~Processor {0} set variable {1} value to {2}~~~", valuedLog.Processor + 1, valuedLog.Variable, valuedLog.Value));
-
-                    return sb.ToString();
-                case LogType.CALC_VALUE:
-                    valuedLog = log as ValuedLogModel;
-                    sb = new StringBuilder();
-
-                    sb.AppendLine(String.Format("Processor {0} executed command and moved", log.Processor + 1));
-                    sb.Append(String.Format("~~~Processor {0} calculated new value of variable {1} to {2}~~~", valuedLog.Processor + 1, valuedLog.Variable, valuedLog.Value));
-
-                    return sb.ToString();
-                case LogType.SUSPENDED:
-                    semaphoreLog = log as SemaphoreLogModel;
-                    return String.Format("Processor {0} has been suspended because resource {1} was locked", log.Processor + 1, semaphoreLog.Semaphore);
-                case LogType.DEADLOCK:
-                    return String.Format("Processor {0} has been suspended and deadlock was detected", log.Processor + 1);
-                case LogType.EXEC_FINISHED:
-                    return String.Format("***Processor {0} finished its execution***", log.Processor + 1);
-                case LogType.ALL_SUSPENDED:
-                    return "^^^Deadlock - All processors are suspended^^^";
-                default:
-                    throw new ArgumentOutOfRangeException();
+                using (StreamWriter sw = new StreamWriter(File.Create(Path.Combine(fbd.SelectedPath, String.Format("export-{0}-{1}.disp",program.Name, DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss"))))))
+                {
+                    sw.Write(String.Join("", logs.Where(x => x is LogModel).Select(x => (x as LogModel).Process + 1)));
+                }
             }
         }
 
-        public void ExecuteCommand(LogModel logModel)
+        public void GenerateDeadlockLog()
         {
-            ValuedLogModel valuedLog;
+            PrintedLogModel printLog = new PrintedLogModel();
+            
+            printLog.Description = "Deadlock has been detected";
+
+            printLog.States = GetStates();
+
+            LogOutput.Add(printLog);
+        }
+
+        public void GenerateLogOutput(LogModel logModel)
+        {
+            PrintedLogModel printLog = new PrintedLogModel
+            {
+                Process = (logModel.Process + 1).ToString()
+            };
+
+            if (logModel.Type == LogType.DISPATCHER_SKIP)
+            {
+                printLog.Description = "----------";
+            }
+            else if(logModel.Type == LogType.DEADLOCK || logModel.Type==LogType.ALL_SUSPENDED)
+            {
+                printLog.Description = "Deadlock has been detected";
+            }
+            else if(logModel is SemaphoreLogModel)
+            {
+                SemaphoreLogModel semLog = logModel as SemaphoreLogModel;
+
+
+                switch (semLog.Type)
+                {
+                    case LogType.ENTER_REGION:
+                        printLog.Description = String.Format("###Enter critical region {0}###", semLog.Semaphore);
+                        break;
+                    case LogType.EXIT_REGION:
+                        printLog.Description = String.Format("###Exit critical region {0}###", semLog.Semaphore);
+                        break;
+                    case LogType.SUSPENDED:
+                        printLog.Description = String.Format("###Blocked on {0}###", semLog.Semaphore);
+                        break;
+                }
+            }
+            else
+            {
+                printLog.Description = CommandTextConverter.GetText(logModel.Command);
+            }
+
+            printLog.States = GetStates();
+
+            LogOutput.Add(printLog);
+        }
+
+        private string GetStates()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            if(variables.Any())
+            {
+                bool first = true;
+                sb.Append("Variables: ");
+
+                foreach (InitialValueModel ivm in variables)
+                {
+                    if (!first)
+                    {
+                        sb.Append("; ");
+                    }
+
+                    sb.Append(String.Format("{0}={1}", ivm.Name, ivm.Value));
+
+                    first = false;
+                }
+
+                sb.Append(";\t\t");
+            }
+            if (semaphores.Any())
+            {
+                bool first = true;
+                sb.Append("Semaphores: ");
+
+                foreach (InitialValueModel ivm in semaphores)
+                {
+                    if (!first)
+                    {
+                        sb.Append("; ");
+                    }
+
+                    sb.Append(String.Format("{0}={1}", ivm.Name, ivm.Value));
+
+                    first = false;
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        public void ExecuteCommand(BaseLogModel log)
+        {
+            LogModel logModel = log as LogModel;
+            VariableLogModel valuedLog;
             SemaphoreLogModel semaphoreLog;
 
-            ProcessorLogModel log = logModel as ProcessorLogModel;
-
-            if (logModel.Type == LogType.SET_VALUE)
+            if(log.Type == LogType.DEADLOCK || log.Type == LogType.ALL_SUSPENDED)
             {
-                valuedLog = log as ValuedLogModel;
+                GenerateDeadlockLog();
+            }
+            else if (log.Type != LogType.EXEC_FINISHED)
+            {
+                GenerateLogOutput(logModel);
+            }
+
+            if (log.Type == LogType.SET_VALUE)
+            {
+                valuedLog = log as VariableLogModel;
                 InitialValueModel variable = VariableValues.First(x => x.Name == valuedLog.Variable);
 
                 previousValues[valuedLog.Variable].Add(variable.Value);
@@ -197,7 +265,7 @@ namespace ThreadingSimulator.ViewModels
 
                 VariableValues = VariableValues.ToList();
             }
-            else if (logModel.Type == LogType.ENTER_REGION)
+            else if (log.Type == LogType.ENTER_REGION)
             {
                 semaphoreLog = log as SemaphoreLogModel;
 
@@ -206,14 +274,15 @@ namespace ThreadingSimulator.ViewModels
 
                 SemaphoreValues = SemaphoreValues.ToList();
 
-                //if(wasSuspended[log.Processor])
-                //{
-                //    wasSuspended[log.Processor] = false;
+                if (IsSuspended[semaphoreLog.Process])
+                {
+                    IsSuspended[semaphoreLog.Process] = false;
+                    IsSuspended = IsSuspended.ToArray();
 
-                //    return;
-                //}
+                    return;
+                }
             }
-            else if (logModel.Type == LogType.EXIT_REGION)
+            else if (log.Type == LogType.EXIT_REGION)
             {
                 semaphoreLog = log as SemaphoreLogModel;
 
@@ -222,32 +291,52 @@ namespace ThreadingSimulator.ViewModels
 
                 SemaphoreValues = SemaphoreValues.ToList();
             }
-            //else if(logModel.Type == LogType.SUSPENDED)
-            //{
-            //    wasSuspended[log.Processor] = true;
-            //}
-            else if(logModel.Type==LogType.DEADLOCK)
+            else if (log.Type == LogType.SUSPENDED)
+            {
+                semaphoreLog = log as SemaphoreLogModel;
+
+                IsSuspended[semaphoreLog.Process] = true;
+                IsSuspended = IsSuspended.ToArray();
+            }
+            else if(log.Type==LogType.DEADLOCK)
             {
                 return;
             }
 
-            if(logModel.Type!=LogType.ALL_SUSPENDED)
+            if(log.Type!=LogType.ALL_SUSPENDED)
             {   
-                processorPositions[log.Processor]++;
-                DisplayColor(log.Processor, processorPositions[log.Processor]);
+                processPositions[logModel.Process]++;
+                DisplayColor(logModel.Process, processPositions[logModel.Process]);
             }
         }
 
-        public void UndoCommand(LogModel logModel)
+        private LogType? GetPreviousCommand(int process)
         {
-            ValuedLogModel valuedLog;
+            for (int i = CurrentLog - 1; i >= 0; i--) 
+            {
+                if(logs[i] is LogModel && (logs[i] as LogModel).Process == process)
+                {
+                    return logs[i].Type;
+                }
+            }
+
+            return null;
+        }
+
+        public void UndoCommand(BaseLogModel log)
+        {
+            LogModel logModel = log as LogModel;
+            VariableLogModel valuedLog;
             SemaphoreLogModel semaphoreLog;
 
-            ProcessorLogModel log = logModel as ProcessorLogModel;
-
-            if (logModel.Type == LogType.SET_VALUE)
+            if (log.Type != LogType.EXEC_FINISHED)
             {
-                valuedLog = log as ValuedLogModel;
+                LogOutput.Remove(LogOutput.Last());
+            }
+
+            if (log.Type == LogType.SET_VALUE)
+            {
+                valuedLog = log as VariableLogModel;
                 InitialValueModel variable = VariableValues.First(x => x.Name == valuedLog.Variable);
                 
                 variable.Value = previousValues[valuedLog.Variable].Last();
@@ -255,16 +344,31 @@ namespace ThreadingSimulator.ViewModels
                 
                 VariableValues = VariableValues.ToList();
             }
-            else if (logModel.Type == LogType.ENTER_REGION)
+            else if (log.Type == LogType.ENTER_REGION)
             {
                 semaphoreLog = log as SemaphoreLogModel;
 
                 InitialValueModel semaphore = SemaphoreValues.First(x => x.Name == semaphoreLog.Semaphore);
                 semaphore.Value++;
 
+                if(GetPreviousCommand(semaphoreLog.Process) == LogType.SUSPENDED)
+                {
+                    IsSuspended[semaphoreLog.Process] = true;
+                    IsSuspended = IsSuspended.ToArray();
+
+                    return;
+                }
+
                 SemaphoreValues = SemaphoreValues.ToList();
             }
-            else if (logModel.Type == LogType.EXIT_REGION)
+            else if(log.Type == LogType.SUSPENDED)
+            {
+                semaphoreLog = log as SemaphoreLogModel;
+
+                IsSuspended[semaphoreLog.Process] = false;
+                IsSuspended = IsSuspended.ToArray();
+            }
+            else if (log.Type == LogType.EXIT_REGION)
             {
                 semaphoreLog = log as SemaphoreLogModel;
 
@@ -273,19 +377,16 @@ namespace ThreadingSimulator.ViewModels
                
                 SemaphoreValues = SemaphoreValues.ToList();
             }
-            else if (logModel.Type == LogType.DEADLOCK)
+            else if (log.Type == LogType.DEADLOCK)
             {
                 return;
             }
 
-            if (logModel.Type != LogType.ALL_SUSPENDED)
+            if (log.Type != LogType.ALL_SUSPENDED)
             {
-                //if(processorPositions[log.Processor]>0)
-                //{
-                    processorPositions[log.Processor]--;
-                //}
+                processPositions[logModel.Process]--;
 
-                DisplayColor(log.Processor, processorPositions[log.Processor]);
+                DisplayColor(logModel.Process, processPositions[logModel.Process]);
             }
         }
 
@@ -316,7 +417,7 @@ namespace ThreadingSimulator.ViewModels
 
         public bool NextLogCmd_CanExecute(object o)
         {
-            return !timerIsRunning && CurrentLog < logs.Count;
+            return !timerIsRunning && CurrentLog < logs.Count - 1;
         }
 
         public void ResetSimulationCmd_Execute(object o)
@@ -351,7 +452,7 @@ namespace ThreadingSimulator.ViewModels
             return !timerIsRunning && CurrentLog < logs.Count - 1;
         }
 
-        public SimulationDisplayVM(ExecutableProgramModel program, List<LogModel> logs, List<InitialValueModel> variables, List<InitialValueModel> semaphores)
+        public SimulationDisplayVM(ExecutableProgramModel program, List<BaseLogModel> logs, List<InitialValueModel> variables, List<InitialValueModel> semaphores)
         {
             Program = program;
 
@@ -359,12 +460,13 @@ namespace ThreadingSimulator.ViewModels
             this.variables = variables;
             this.semaphores = semaphores;
 
-            processorPositions = new int[program.ProcessorCount];
-            //wasSuspended = new bool[program.ProcessorCount];
+            processPositions = new int[program.ProcessCount];
+            IsSuspended = new bool[program.ProcessCount];
 
+            LogOutput = new ObservableCollection<PrintedLogModel>();
             previousValues = new Dictionary<string, List<int>>();
 
-            timer = new Timer
+            timer = new System.Timers.Timer
             {
                 Interval = TICK,
                 AutoReset = true
@@ -409,30 +511,31 @@ namespace ThreadingSimulator.ViewModels
             VariableValues = CloneList(variables);
             SemaphoreValues = CloneList(semaphores);
 
-            for (int i = processorPositions.Length - 1; i >= 0; i--) 
+            for (int i = processPositions.Length - 1; i >= 0; i--) 
             {
-                Program.Processors[i].Commands.First().DisplayColor = true;
-                //wasSuspended[i] = false;
-                processorPositions[i] = 0;
+                Program.Processes[i].Commands.First().DisplayColor = true;
+                IsSuspended[i] = false;
+                processPositions[i] = 0;
                 DisplayColor(i, 0);
             }
+
+            IsSuspended = IsSuspended.ToArray();
+            LogOutput = new ObservableCollection<PrintedLogModel>();
 
             previousValues.Clear();
             foreach (InitialValueModel ivm in VariableValues)
             {
                 previousValues.Add(ivm.Name, new List<int>());
             }
-
-            Redraw?.Invoke();
         }
 
-        private void DisplayColor(int processorNo, int commandNo)
+        private void DisplayColor(int processNo, int commandNo)
         {
-            Program.Processors[processorNo].Commands.ForEach(x => x.DisplayColor = false);
+            Program.Processes[processNo].Commands.ForEach(x => x.DisplayColor = false);
 
-            if (commandNo >= 0 && commandNo < Program.Processors[processorNo].CommandCount)
+            if (commandNo >= 0 && commandNo < Program.Processes[processNo].CommandCount)
             {
-                Program.Processors[processorNo].Commands[commandNo].DisplayColor = true;
+                Program.Processes[processNo].Commands[commandNo].DisplayColor = true;
             }
         }
 

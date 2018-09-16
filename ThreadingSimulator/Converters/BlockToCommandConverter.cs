@@ -14,10 +14,11 @@ namespace ThreadingSimulator.Converters
         public static ExecutableProgramModel Convert(ProgramModel program)
         {
             ExecutableProgramModel retModel = new ExecutableProgramModel();
-          
-            foreach(ProcessorBlocksModel blocks in program.Processors)
+            retModel.Name = program.Name;
+
+            foreach(ProcessBlocksModel blocks in program.Processes)
             {
-                retModel.Add(new ProcessorCommandsModel()
+                retModel.Add(new ProcessCommandsModel()
                 {
                     Name = blocks.Name,
                     Commands = InternalConvert(blocks.Blocks.ToList())

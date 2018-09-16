@@ -17,6 +17,7 @@ namespace ThreadingSimulator.Enums
         EXEC_FINISHED,
         ENTER_REGION,
         EXIT_REGION,
-        ALL_SUSPENDED
+        ALL_SUSPENDED,
+        DISPATCHER_SKIP
     }
 }

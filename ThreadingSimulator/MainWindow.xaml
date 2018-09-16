@@ -7,8 +7,9 @@
         xmlns:controls="clr-namespace:ThreadingSimulator.Controls"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="Threading Simulator" 
-        ResizeMode="NoResize"
+        Title="Threading Simulator"
+        WindowState="Maximized"
+        ResizeMode="CanMinimize"
         Height="600" 
         Width="800">
     <Grid>

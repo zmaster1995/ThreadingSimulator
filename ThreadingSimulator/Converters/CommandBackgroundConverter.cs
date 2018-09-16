@@ -20,12 +20,28 @@ namespace ThreadingSimulator.Converters
             bool active = (bool)values[2];
             bool simulation = values[3] != DependencyProperty.UnsetValue ? (bool)values[3] : false;
 
-            if (!active && simulation)
+            if (simulation)
             {
-                return new SolidColorBrush(Colors.Black)
+                bool suspended = (bool)values[4];
+
+                if (active)
                 {
-                    Opacity = 0.2
-                };
+                    if(suspended)
+                    {
+                        return resources["SuspendedColor"];
+                    }
+                    else
+                    {
+                        return resources["ActiveColor"];
+                    }
+                }
+                else
+                {
+                    return new SolidColorBrush(Colors.Black)
+                    {
+                        Opacity = 0.2
+                    };
+                }
             }
 
             switch (type)

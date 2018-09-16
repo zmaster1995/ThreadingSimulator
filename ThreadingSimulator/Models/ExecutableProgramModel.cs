@@ -10,24 +10,25 @@ namespace ThreadingSimulator.Models
 {
     public class ExecutableProgramModel
     {
-        public List<ProcessorCommandsModel> Processors { get; set; }
+        public string Name { get; set; }
+        public List<ProcessCommandsModel> Processes { get; set; }
         
-        public int ProcessorCount
+        public int ProcessCount
         {
             get
             {
-                return Processors != null ? Processors.Count : -1;
+                return Processes != null ? Processes.Count : -1;
             }
         }
         
-        public void Add(ProcessorCommandsModel commands)
+        public void Add(ProcessCommandsModel commands)
         {
-            if(Processors==null)
+            if(Processes==null)
             {
-                Processors = new List<ProcessorCommandsModel>();
+                Processes = new List<ProcessCommandsModel>();
             }
 
-            Processors.Add(commands);
+            Processes.Add(commands);
         }
     }
 }

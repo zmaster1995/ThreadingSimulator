@@ -1,7 +1,7 @@
 [
   {
     "Name": "KontrolaPristupa",
-    "Processors": [
+    "Processes": [
       {
         "Name": "Thread1",
         "Blocks": [
@@ -76,7 +76,7 @@
   },
   {
     "Name": "Signalizacija",
-    "Processors": [
+    "Processes": [
       {
         "Name": "Thread1",
         "Blocks": [
@@ -121,7 +121,7 @@
   },
   {
     "Name": "ConsumerProducer - 1 Buffer",
-    "Processors": [
+    "Processes": [
       {
         "Name": "Producer",
         "Blocks": [
@@ -188,7 +188,7 @@
   },
   {
     "Name": "ConsumerProducer - Vise bafera",
-    "Processors": [
+    "Processes": [
       {
         "Name": "Producer",
         "Blocks": [
@@ -275,7 +275,7 @@
   },
   {
     "Name": "T",
-    "Processors": [
+    "Processes": [
       {
         "Name": "t1",
         "Blocks": [
@@ -331,7 +331,7 @@
   },
   {
     "Name": "v",
-    "Processors": [
+    "Processes": [
       {
         "Name": "a",
         "Blocks": [
@@ -345,7 +345,7 @@
   },
   {
     "Name": "Deadlock1",
-    "Processors": [
+    "Processes": [
       {
         "Name": "Thread",
         "Blocks": [
@@ -362,7 +362,7 @@
   },
   {
     "Name": "Deadlock2",
-    "Processors": [
+    "Processes": [
       {
         "Name": "Thread1",
         "Blocks": [
@@ -426,6 +426,64 @@
             "SemaphorOperation": 1,
             "Type": 0,
             "ZIndex": 997
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "Name": "asd",
+    "Processes": [
+      {
+        "Name": "asd",
+        "Blocks": [
+          {
+            "$type": "ThreadingSimulator.Models.VariableBlockModel, ThreadingSimulator",
+            "VariableName": "a",
+            "VariableOperationType": 0,
+            "Value": null,
+            "Type": 1,
+            "ZIndex": 1000
+          },
+          {
+            "Type": 2,
+            "ZIndex": 999
+          },
+          {
+            "$type": "ThreadingSimulator.Models.VariableBlockModel, ThreadingSimulator",
+            "VariableName": "a",
+            "VariableOperationType": 1,
+            "Value": 1,
+            "Type": 1,
+            "ZIndex": 998
+          },
+          {
+            "Type": 2,
+            "ZIndex": 997
+          },
+          {
+            "$type": "ThreadingSimulator.Models.VariableBlockModel, ThreadingSimulator",
+            "VariableName": "a",
+            "VariableOperationType": 2,
+            "Value": 1,
+            "Type": 1,
+            "ZIndex": 996
+          },
+          {
+            "Type": 2,
+            "ZIndex": 995
+          },
+          {
+            "$type": "ThreadingSimulator.Models.VariableBlockModel, ThreadingSimulator",
+            "VariableName": "a",
+            "VariableOperationType": 3,
+            "Value": 1,
+            "Type": 1,
+            "ZIndex": 994
+          },
+          {
+            "Type": 2,
+            "ZIndex": 993
           }
         ]
       }

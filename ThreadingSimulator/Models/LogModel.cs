@@ -7,8 +7,17 @@ using ThreadingSimulator.Enums;
 
 namespace ThreadingSimulator.Models
 {
-    public class LogModel
+    public class LogModel : BaseLogModel
     {
-        public LogType Type { get; set; }
+        public int Process { get; set; }
+        public CommandModel Command { get; set; }
+        
+        public bool ShouldDisplay
+        {
+            get
+            {
+                return Command != null;
+            }
+        }
     }
 }

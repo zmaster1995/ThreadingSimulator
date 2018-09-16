@@ -15,11 +15,13 @@ namespace ThreadingSimulator.ViewModels
         protected abstract void Initialize();
         protected abstract Window MakeDialog();
 
-        public void Show()
+        public bool Show()
         {
             if(initialized)
             {
-                window.ShowDialog();
+                bool? res = window.ShowDialog();
+
+                return res != null && res.Value;
             }
             else
             {
@@ -31,10 +33,11 @@ namespace ThreadingSimulator.ViewModels
         {
             window = MakeDialog();
 
-            window.ResizeMode = ResizeMode.NoResize;
+            window.ResizeMode = ResizeMode.CanMinimize;
             window.Owner = Application.Current.MainWindow;
             window.DataContext = this;
             window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            window.ShowInTaskbar = false;
 
             initialized = true;
             return Task.Factory.StartNew(() => Initialize());

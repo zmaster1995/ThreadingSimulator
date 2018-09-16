@@ -48,6 +48,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -93,10 +94,13 @@
     <Compile Include="Converters\BlockToCommandConverter.cs" />
     <Compile Include="Converters\CommandBackgroundConverter.cs" />
     <Compile Include="Converters\CommandDisplayTextConverter.cs" />
+    <Compile Include="Converters\CommandTextConverter.cs" />
+    <Compile Include="Converters\GetSuspendedConverter.cs" />
     <Compile Include="Converters\InvertBooleanConverter.cs" />
     <Compile Include="Converters\LoopBlockWidthConverter.cs" />
     <Compile Include="Converters\MultivalueParameterConverter.cs" />
     <Compile Include="Converters\BorderStyleConverter.cs" />
+    <Compile Include="Converters\ProcessCountMaximumConverter.cs" />
     <Compile Include="Converters\PuzzlePlacementHorizontalConverter.cs" />
     <Compile Include="Converters\PuzzlePlacementVerticalConverter.cs" />
     <Compile Include="Dialogs\ExecutionSetupDialog.xaml.cs">
@@ -121,21 +125,22 @@
     <Compile Include="Models\CommandModel.cs" />
     <Compile Include="Models\DispatcherValue.cs" />
     <Compile Include="Models\ExecutionSettingsModel.cs" />
+    <Compile Include="Models\BaseLogModel.cs" />
     <Compile Include="Models\LogModel.cs" />
+    <Compile Include="Models\PrintedLogModel.cs" />
     <Compile Include="Models\SemaphoreLogModel.cs" />
-    <Compile Include="Models\ValuedLogModel.cs" />
-    <Compile Include="Models\ThreadCountModel.cs" />
+    <Compile Include="Models\ProcessCountModel.cs" />
     <Compile Include="Models\InitialValueModel.cs" />
-    <Compile Include="Models\ProcessorLogModel.cs" />
     <Compile Include="Enums\LogType.cs" />
     <Compile Include="Models\LoopBlockModel.cs" />
     <Compile Include="Models\SemaphorBlockModel.cs" />
     <Compile Include="Enums\SemaphorOperationType.cs" />
-    <Compile Include="Models\ProcessorCommandsModel.cs" />
-    <Compile Include="Models\ProcessorBlocksModel.cs" />
+    <Compile Include="Models\ProcessCommandsModel.cs" />
+    <Compile Include="Models\ProcessBlocksModel.cs" />
     <Compile Include="Models\ExecutableProgramModel.cs" />
     <Compile Include="Models\ProgramModel.cs" />
     <Compile Include="Models\VariableBlockModel.cs" />
+    <Compile Include="Models\VariableLogModel.cs" />
     <Compile Include="Other\DelegateCommand.cs" />
     <Compile Include="Other\PropertyChangedImpl.cs" />
     <Compile Include="Styles\DraggableBlockTemplateSelector.cs" />
@@ -230,6 +235,15 @@
     <Resource Include="Assets\icons8-pause-button-48.png" />
     <Resource Include="Assets\icons8-restart-48.png" />
     <Resource Include="Assets\icons8-right-64.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\icons8-import-50.png" />
+    <Resource Include="Assets\icons8-export-40.png" />
+    <Resource Include="Assets\icons8-sort-down-40.png" />
+    <Resource Include="Assets\icons8-sort-up-40.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\icons8-reload-64.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

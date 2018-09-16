@@ -9,10 +9,10 @@
         <ScrollViewer VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Auto"
                       MaxHeight="450">
-            <ItemsControl ItemsSource="{Binding Processors}">
+            <ItemsControl ItemsSource="{Binding Processes}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <UniformGrid Width="Auto" Columns="{Binding ProcessorCount}" />
+                        <UniformGrid HorizontalAlignment="Center" Width="Auto" Columns="{Binding ProcessCount}" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>

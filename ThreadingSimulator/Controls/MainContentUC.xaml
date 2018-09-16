@@ -35,13 +35,14 @@
     <Grid>
         <Grid Margin="0 10 0 0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="20"></RowDefinition>
+                <RowDefinition Height="25"></RowDefinition>
                 <RowDefinition></RowDefinition>
+                <RowDefinition Height="25"></RowDefinition>
                 <RowDefinition Height="10"></RowDefinition>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="5"></ColumnDefinition>
-                <ColumnDefinition Width="170"></ColumnDefinition>
+                <ColumnDefinition Width="220"></ColumnDefinition>
                 <ColumnDefinition Width="10"></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition Width="5"></ColumnDefinition>
@@ -49,9 +50,11 @@
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Row="0"
                         Grid.Column="1"
-                        Orientation="Horizontal"
-                        HorizontalAlignment="Right">
+                        Orientation="Horizontal">
+                <Label Content="Predefined examples:"></Label>
                 <Button Command="{Binding AddCmd}"
+                        Margin="50 0 5 0"
+                        ToolTip="Add new example"
                         Style="{StaticResource ButtonStyle}">
                     <Button.Content>
                         <Image Source="{StaticResource Add}"
@@ -60,6 +63,7 @@
                     </Button.Content>
                 </Button>
                 <Button Command="{Binding EditCmd}"
+                        ToolTip="Edit selected example"
                         Style="{StaticResource ButtonStyle}">
                     <Button.Content>
                         <Image Source="{StaticResource Edit}"
@@ -95,6 +99,7 @@
                             <DockPanel Grid.Column="1" 
                                        VerticalAlignment="Center">
                                 <Button Grid.Column="1"
+                                    ToolTip="Delete example"
                                     Command="{Binding ElementName=Control, Path=DataContext.DeleteCmd}"
                                     CommandParameter="{Binding}"
                                     Style="{StaticResource ButtonStyle}">
@@ -149,13 +154,14 @@
                                        Height="22"
                                        Width="22"
                                        Margin="0 -2 0 0"></Image>
-                                <TextBlock Text="Preview" 
+                                <TextBlock Text="Preview processes" 
                                            FontWeight="Bold"
                                            Margin="5 0 0 0"></TextBlock>
                             </StackPanel>
                         </Button.Content>
                     </Button>
                     <Button Command="{Binding SaveCmd}"
+                            ToolTip="Save example"
                             Style="{StaticResource ButtonStyle}"
                             Visibility="{Binding EditMode, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <Button.Content>
@@ -165,6 +171,7 @@
                         </Button.Content>
                     </Button>
                     <Button Command="{Binding CancelCmd}"
+                            ToolTip="Cancel edit"
                             Style="{StaticResource ButtonStyle}"
                             Visibility="{Binding EditMode, Converter={StaticResource BooleanToVisibilityConverter}}">
                         <Button.Content>
@@ -194,10 +201,10 @@
                               VerticalScrollBarVisibility="Auto">
                     <StackPanel x:Name="Panel"
                                 Orientation="Horizontal">
-                        <ItemsControl ItemsSource="{Binding Program.Processors}">
+                        <ItemsControl ItemsSource="{Binding Program.Processes}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <UniformGrid Columns="{Binding Program.ProcessorCount}" />
+                                    <UniformGrid Columns="{Binding Program.ProcessCount}" />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
@@ -211,9 +218,10 @@
 
                                         <Button Grid.Row="0"
                                                 Height="16"
+                                                ToolTip="Delete process"
                                                 Width="16"
                                                 IsEnabled="{Binding EditMode}"
-                                                Command="{Binding ElementName=Control, Path=DataContext.DeleteThreadCmd}"
+                                                Command="{Binding ElementName=Control, Path=DataContext.DeleteProcessCmd}"
                                                 Visibility="{Binding ElementName=Control, Path=DataContext.EditMode, Converter={StaticResource BooleanToVisibilityConverter}}"
                                                 CommandParameter="{Binding}"
                                                 Style="{StaticResource ButtonStyle}"
@@ -226,7 +234,7 @@
                                         
                                         <StackPanel Grid.Row="1"
                                                     Orientation="Horizontal">
-                                                <Label Content="Thread Name:"
+                                                <Label Content="Process Name:"
                                                        Margin="0 -3 0 0"></Label>
                                             <TextBox Text="{Binding Name}"
                                                      Width="130"
@@ -250,7 +258,8 @@
                         </ItemsControl>
 
                         <Grid Height="{Binding ElementName=Panel, Path=ActualHeight}">
-                            <Button Command="{Binding AddThreadCmd}"
+                            <Button Command="{Binding AddProcessCmd}"
+                                ToolTip="Add new process"
                                 Style="{StaticResource ButtonStyle}"
                                 Visibility="{Binding EditMode, Converter={StaticResource BooleanToVisibilityConverter}}"
                                 VerticalAlignment="Center"
@@ -277,6 +286,13 @@
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>
             </Grid>
+
+            <StackPanel Grid.Row="2"
+                        Grid.ColumnSpan="2"
+                        Orientation="Horizontal">
+                <Label Content="Current mode:"></Label>
+                <Label Content="{Binding ModeIndicator}"></Label>
+            </StackPanel>
         </Grid>
         <Grid Background="White"
               Opacity="0.5"

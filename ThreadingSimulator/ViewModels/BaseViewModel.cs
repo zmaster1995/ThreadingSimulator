@@ -11,7 +11,7 @@ using ThreadingSimulator.Other;
 namespace ThreadingSimulator.ViewModels
 {
     public class BaseViewModel : PropertyChangedImpl
-    { 
+    {
         protected void Alert(Exception ex)
         {
             StringBuilder sb = new StringBuilder();
@@ -24,6 +24,11 @@ namespace ThreadingSimulator.ViewModels
             sb.Append(ex.StackTrace);
 
             MessageBox.Show(sb.ToString());
+        }
+
+        protected void Alert(string text)
+        {
+            MessageBox.Show(text);
         }
     }
 }

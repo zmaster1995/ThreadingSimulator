@@ -11,7 +11,7 @@ namespace ThreadingSimulator.Models
     public class ExecutionSettingsModel : PropertyChangedImpl
     {
         private bool dispatcherEnabled = false;
-        public ObservableCollection<DispatcherValue> dispatcher = new ObservableCollection<DispatcherValue>();
+        public ObservableCollection<int> dispatcher = new ObservableCollection<int>();
 
         public List<InitialValueModel> Variables { get; set; } = new List<InitialValueModel>();
         public List<InitialValueModel> Semaphores { get; set; } = new List<InitialValueModel>();
@@ -30,28 +30,17 @@ namespace ThreadingSimulator.Models
             }
         }
 
-        public ObservableCollection<DispatcherValue> Dispatcher
+        public ObservableCollection<int> Dispatcher
         {
             get
             {
-                return DispatcherEnabled ? dispatcher : new ObservableCollection<DispatcherValue>();
+                return DispatcherEnabled ? dispatcher : new ObservableCollection<int>();
             }
             set
             {
                 dispatcher = value;
                 OnPropertyChanged();
             }
-        }
-
-        public ExecutionSettingsModel()
-        {
-            AddNew();
-        }
-
-        private void AddNew()
-        {
-            dispatcher.Add(new DispatcherValue());
-            dispatcher.Last().ValueChanged += AddNew;
         }
     }
 }

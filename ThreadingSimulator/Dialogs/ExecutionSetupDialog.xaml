@@ -6,53 +6,74 @@
         xmlns:local="clr-namespace:ThreadingSimulator.Dialogs"
         xmlns:controls="clr-namespace:ThreadingSimulator.Controls"
         xmlns:extra="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:loaders="clr-namespace:Loaders;assembly=MrMitch.Loaders"
-        mc:Ignorable="d"
-        SizeToContent="WidthAndHeight"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:loaders="clr-namespace:Loaders;assembly=MrMitch.Loaders"
+        xmlns:converters="clr-namespace:ThreadingSimulator.Converters"
+        xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
+        mc:Ignorable="d"       
         Name="Control"
+        WindowState="Maximized"
         Title="Execution setup" Height="450" Width="800">
+        <!--SizeToContent="WidthAndHeight"-->
     <Window.Resources>
-        <BitmapImage x:Key="Run" UriSource="../Assets/icons8-play-64.png"/>
-        
+
+        <converters:ProcessCountMaximumConverter x:Key="ProcessCountMaximumConverter"></converters:ProcessCountMaximumConverter>
+        <converters:InvertBooleanConverter x:Key="InvertBooleanConverter"></converters:InvertBooleanConverter>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+
+        <BitmapImage x:Key="Run" UriSource="../Assets/icons8-play-64.png"/>
+        <BitmapImage x:Key="Import" UriSource="../Assets/icons8-import-50.png"/>
+        <BitmapImage x:Key="Export" UriSource="../Assets/icons8-export-40.png"/>
+        <BitmapImage x:Key="Up" UriSource="../Assets/icons8-sort-up-40.png"/>
+        <BitmapImage x:Key="Down" UriSource="../Assets/icons8-sort-down-40.png"/>
     </Window.Resources>
     <Grid>
-        <Grid Margin="5 5 5 15">
+        <Grid>
             <StackPanel>
-                <Expander IsExpanded="False" Header="Preview">
+                <Expander Margin="5" IsExpanded="False" Header="Preview">
                     <controls:DisplayCommandsUC DataContext="{Binding ExecutableProgram}"></controls:DisplayCommandsUC>
                 </Expander>
-                <Grid Width="500">
+                <Grid Background="#F0ECEC">
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition Width="100"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="25"></RowDefinition>
                         <RowDefinition></RowDefinition>
+                        <RowDefinition Height="10"></RowDefinition>
                     </Grid.RowDefinitions>
 
-                    <Label Grid.Column="0" 
-                           Content="Number of threads:"></Label>
+                    <Label Grid.Column="1" 
+                           Content="Number of processes:"></Label>
 
-                    <ItemsControl Grid.Column="0"
+                    <ItemsControl Grid.Column="1"
                                   Grid.Row="1"
-                                  ItemsSource="{Binding Threads}">
+                                  ItemsSource="{Binding Processes}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
                                     <Label Content="{Binding Name}" Width="80" ToolTip="{Binding Name}"></Label>
-                                    <extra:IntegerUpDown Value="{Binding Value}" Minimum="1"></extra:IntegerUpDown>
+                                    <extra:IntegerUpDown Name="NumericUpDown" Value="{Binding Value}" Minimum="1">
+                                        <extra:IntegerUpDown.Maximum>
+                                            <MultiBinding Converter="{StaticResource ProcessCountMaximumConverter}">
+                                                <Binding ElementName="Control" Path="DataContext.ProcessCount"></Binding>
+                                                <Binding ElementName="NumericUpDown" Path="Value"></Binding>
+                                            </MultiBinding>
+                                        </extra:IntegerUpDown.Maximum>
+                                    </extra:IntegerUpDown>
                                 </StackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
-                    <Label Grid.Column="1" 
+                    <Label Grid.Column="2" 
                            Content="Semaphor initialization:"></Label>
 
-                    <ItemsControl Grid.Column="1"
+                    <ItemsControl Grid.Column="2"
                                   Grid.Row="1"
                                   ItemsSource="{Binding Settings.Semaphores}">
                         <ItemsControl.ItemTemplate>
@@ -65,10 +86,10 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
-                    <Label Grid.Column="2"
+                    <Label Grid.Column="3"
                            Content="Variable initialization:"></Label>
 
-                    <ItemsControl Grid.Column="2"
+                    <ItemsControl Grid.Column="3"
                                   Grid.Row="1"
                                   ItemsSource="{Binding Settings.Variables}">
                         <ItemsControl.ItemTemplate>
@@ -81,30 +102,142 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </Grid>
-                <CheckBox Content="Controlled Dispatcher" 
-                          Name="CheckBox"
-                          IsChecked="{Binding Settings.DispatcherEnabled}"
-                          Margin="0 15 0 5"></CheckBox>
+                <Label Content="Execution scenarion"></Label>
+                <StackPanel Orientation="Horizontal" Margin="5 0">
+                    <RadioButton GroupName="dispather" 
+                                 Content="Auto Dispatcher"
+                                 IsChecked="{Binding Settings.DispatcherEnabled, Converter={StaticResource InvertBooleanConverter}}"></RadioButton>
+                    <RadioButton GroupName="dispather" 
+                                 Content="Controller Dispatcher"
+                                 Margin="55 0"
+                                 IsChecked="{Binding Settings.DispatcherEnabled}"></RadioButton>
+                </StackPanel>
+                <Grid Visibility="{Binding Settings.DispatcherEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <ItemsControl ItemsSource="{Binding AvailableProcesses}"                                 
+                                  dd:DragDrop.IsDragSource="True"
+                                  ItemTemplate="{StaticResource DispatcherValueTemplate}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"></StackPanel>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.Style>
+                            <Style TargetType="ItemsControl">
+                                <Setter Property="ItemContainerStyle">
+                                    <Setter.Value>
+                                        <Style TargetType="ContentPresenter">
+                                            <Setter Property="Tag">
+                                                <Setter.Value>
+                                                    <sys:Boolean>True</sys:Boolean>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Setter Property="Margin" Value="10 0"></Setter>
+                                        </Style>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ItemsControl.Style>
+                    </ItemsControl>
+
+                    <StackPanel Grid.Column="1" Margin="20 0">
+                        <TextBox Text="{Binding ImportDispatcherText}"></TextBox>
+                        <Grid Margin="0 10 0 0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            
+                            <Button Style="{StaticResource ButtonStyle}"
+                                    Height="20"
+                                    Width="30"
+                                    Grid.Column="1"
+                                    ToolTip="Convert scenario to string"
+                                    Command="{Binding ExportDispatcher}">
+                                <Button.Content>
+                                    <Image Source="{StaticResource Up}"></Image>
+                                </Button.Content>
+                            </Button>
+
+                            <Button Height="20"
+                                    Width="30"
+                                    Grid.Column="2"
+                                    ToolTip="Parse scenario"
+                                    Style="{StaticResource ButtonStyle}"
+                                    Command="{Binding ImportDispatcher}">
+                                <Button.Content>
+                                    <Image Source="{StaticResource Down}"></Image>
+                                </Button.Content>
+                            </Button>
+                        </Grid>
+                    </StackPanel>
+
+                    <Button Grid.Column="2"
+                            Width="100"
+                            Height="25"
+                            ToolTip="Import scenarion from file"
+                            Command="{Binding ImportCmd}"
+                            Style="{StaticResource ButtonStyle}">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{StaticResource Import}"
+                                       Height="20"></Image>
+                                <Label Content="Import"></Label>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                </Grid>
                 <ScrollViewer HorizontalScrollBarVisibility="Auto"
                               VerticalScrollBarVisibility="Disabled"
                               Name="Scroll"
-                              MaxWidth="500"
+                              Margin="5 15 0 0"
                               Visibility="{Binding Settings.DispatcherEnabled, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <ItemsControl Height="20"
-                                  SizeChanged="ItemsControl_SizeChanged"
-                                  ItemsSource="{Binding Settings.Dispatcher}">
+                    <ItemsControl ItemsSource="{Binding Settings.Dispatcher}"
+                                  Height="25"
+                                  Margin="0 0 5 0"
+                                  Background="#F0ECEC"
+                                  HorizontalAlignment="Stretch"    
+                                  dd:DragDrop.DropHandler="{Binding ElementName=Control, Path=DataContext}"
+                                  dd:DragDrop.IsDragSource="True"
+                                  dd:DragDrop.IsDropTarget="True"
+                                  dd:DragDrop.UseDefaultEffectDataTemplate="True"
+                                  ItemTemplate="{StaticResource DispatcherValueTemplate}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal"/>
+                                <StackPanel HorizontalAlignment="Stretch"
+                                            Orientation="Horizontal"></StackPanel>
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <ComboBox Width="35"
-                                          SelectedItem="{Binding Value}"
-                                          ItemsSource="{Binding ElementName=Control, Path=DataContext.AvailableThreads}"></ComboBox>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.Style>
+                            <Style TargetType="ItemsControl">
+                                <Setter Property="ItemContainerStyle">
+                                    <Setter.Value>
+                                        <Style TargetType="ContentPresenter">
+                                            <Setter Property="ContextMenu">
+                                                <Setter.Value>
+                                                    <ContextMenu>
+                                                        <MenuItem Header="Delete">
+                                                            <MenuItem.Style>
+                                                                <Style TargetType="MenuItem">
+                                                                    <EventSetter Event="Click" Handler="MenuItem_Click"/>
+                                                                </Style>
+                                                            </MenuItem.Style>
+                                                        </MenuItem>
+                                                    </ContextMenu>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ItemsControl.Style>
                     </ItemsControl>
                 </ScrollViewer>
                 <Button Style="{StaticResource ButtonStyle}"
@@ -128,7 +261,7 @@
         <Grid Background="White"
                   Opacity="0.5"
                   Visibility="{Binding Busy, Converter={StaticResource BooleanToVisibilityConverter}}"></Grid>
-        <Grid >
+        <Grid>
             <loaders:ChromeLoader Visibility="{Binding Busy, Converter={StaticResource BooleanToVisibilityConverter}}"
                                       Width="100"
                                       Height="100"/>

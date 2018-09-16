@@ -20,15 +20,43 @@ namespace ThreadingSimulator.Dialogs
     /// </summary>
     public partial class SimulationDisplayDialog : Window
     {
+        private bool internalTransition;
+
         public SimulationDisplayDialog()
         {
             InitializeComponent();
 
+            Closing += SimulationDisplayDialog_Closing;
+            DataContextChanged += SimulationDisplayDialog_DataContextChanged;
         }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void SimulationDisplayDialog_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            LogConsole.ScrollToEnd();
+            (DataContext as SimulationDisplayVM).Close += Close;
+        }
+
+        private void SimulationDisplayDialog_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            DialogResult = (DataContext as SimulationDisplayVM).NewSimulation;
+        }
+
+        private void LogConsole_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            internalTransition = true;
+
+            LogConsole.SelectedIndex = LogConsole.Items.Count - 1;
+            LogConsole.ScrollIntoView(LogConsole.SelectedItem);
+            LogConsole.SelectedIndex = -1;
+
+            internalTransition = false;
+        }
+
+        private void LogConsole_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(!internalTransition)
+            {
+                LogConsole.SelectedIndex = -1;
+            }
         }
     }
 }

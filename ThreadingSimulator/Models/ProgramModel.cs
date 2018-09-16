@@ -12,7 +12,7 @@ using ThreadingSimulator.Other;
 
 namespace ThreadingSimulator.Models
 {
-    [XmlInclude(typeof(ProcessorBlocksModel))]
+    [XmlInclude(typeof(ProcessBlocksModel))]
     [XmlInclude(typeof(BlockModel))]
     [XmlInclude(typeof(LoopBlockModel))]
     [XmlInclude(typeof(SemaphorBlockModel))]
@@ -24,15 +24,15 @@ namespace ThreadingSimulator.Models
         private bool subscribed = false;
 
         public string Name { get; set; }
-        public ObservableCollection<ProcessorBlocksModel> Processors { get; set; }
+        public ObservableCollection<ProcessBlocksModel> Processes { get; set; }
 
         [XmlIgnore]
         [JsonIgnore]
-        public int ProcessorCount
+        public int ProcessCount
         {
             get
             {
-                return Processors != null ? Processors.Count : 0;
+                return Processes != null ? Processes.Count : 0;
             }
         }
 
@@ -42,12 +42,12 @@ namespace ThreadingSimulator.Models
         {
             get
             {
-                if (!String.IsNullOrEmpty(Name) && ProcessorCount > 0 
-                    && ProcessorCount == Processors.Select(x=>x.Name).Distinct().Count())
+                if (!String.IsNullOrEmpty(Name) && ProcessCount > 0 
+                    && ProcessCount == Processes.Select(x=>x.Name).Distinct().Count())
                 {
-                    foreach(ProcessorBlocksModel processor in Processors)
+                    foreach(ProcessBlocksModel process in Processes)
                     {
-                        if(!processor.IsValid)
+                        if(!process.IsValid)
                         {
                             return false;
                         }
@@ -60,30 +60,30 @@ namespace ThreadingSimulator.Models
             }
         }
         
-        public void Add(ProcessorBlocksModel commands)
+        public void Add(ProcessBlocksModel commands)
         {
-            if(Processors==null)
+            if(Processes==null)
             {
-                Processors = new ObservableCollection<ProcessorBlocksModel>();
+                Processes = new ObservableCollection<ProcessBlocksModel>();
 
                 SubscribeToChanges();
-                OnPropertyChanged(nameof(Processors));
-                OnPropertyChanged(nameof(ProcessorCount));
+                OnPropertyChanged(nameof(Processes));
+                OnPropertyChanged(nameof(ProcessCount));
             }
 
-            Processors.Add(commands);
+            Processes.Add(commands);
         }
 
-        private void Processors_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void Processes_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            OnPropertyChanged(nameof(ProcessorCount));
+            OnPropertyChanged(nameof(ProcessCount));
         }
 
         public void SubscribeToChanges()
         {
-            if(Processors !=null && !subscribed)
+            if(Processes !=null && !subscribed)
             {
-                Processors.CollectionChanged += Processors_CollectionChanged;
+                Processes.CollectionChanged += Processes_CollectionChanged;
                 subscribed = true;
             }
         }

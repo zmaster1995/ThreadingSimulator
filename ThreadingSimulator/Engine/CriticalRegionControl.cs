@@ -28,24 +28,24 @@ namespace ThreadingSimulator.Engine
             suspended.Clear();
         }
         
-        private string GetProcessorUniqueName(int processor, Dictionary<int, string> processorNames)
+        private string GetProcessUniqueName(int process, Dictionary<int, string> processNames)
         {
-            if(!processorNames.ContainsKey(processor))
+            if(!processNames.ContainsKey(process))
             {
-                processorNames.Add(processor, String.Format("{0}:{1}", Guid.NewGuid().ToString(), processor));
+                processNames.Add(process, String.Format("{0}:{1}", Guid.NewGuid().ToString(), process));
             }
 
-            return processorNames[processor];
+            return processNames[process];
         }
 
-        private List<string> GetAllGraphNodes(Dictionary<int, string> processorNames)
+        private List<string> GetAllGraphNodes(Dictionary<int, string> processNames)
         {
-            string processorName;
+            string processName;
             List<string> nodes = new List<string>();
 
             foreach(KeyValuePair<int, List<string>> pair in lockedResources)
             {
-                nodes.Add(GetProcessorUniqueName(pair.Key, processorNames));
+                nodes.Add(GetProcessUniqueName(pair.Key, processNames));
                 
                 foreach(string resource in pair.Value)
                 {
@@ -63,13 +63,13 @@ namespace ThreadingSimulator.Engine
                     nodes.Add(pair.Key);
                 }
 
-                foreach(int processor in pair.Value)
+                foreach(int process in pair.Value)
                 {
-                    processorName = GetProcessorUniqueName(processor, processorNames);
+                    processName = GetProcessUniqueName(process, processNames);
                     
-                    if(!nodes.Contains(processorName))
+                    if(!nodes.Contains(processName))
                     {
-                        nodes.Add(processorName);
+                        nodes.Add(processName);
                     }
                 }
             }
@@ -77,11 +77,11 @@ namespace ThreadingSimulator.Engine
             return nodes;
         }
 
-        private bool IsDeadlock(int processorNo)
+        private bool IsDeadlock(int processNo)
         {
-            Dictionary<int, string> processorNames = new Dictionary<int, string>();
+            Dictionary<int, string> processNames = new Dictionary<int, string>();
 
-            List<string> nodes = GetAllGraphNodes(processorNames);
+            List<string> nodes = GetAllGraphNodes(processNames);
 
             DeadlockDetectionGraph graph = new DeadlockDetectionGraph(nodes);
 
@@ -89,40 +89,40 @@ namespace ThreadingSimulator.Engine
             {
                 foreach(string res in pair.Value)
                 {
-                    graph.AddEdge(GetProcessorUniqueName(pair.Key, processorNames), res);
+                    graph.AddEdge(GetProcessUniqueName(pair.Key, processNames), res);
                 }
             }
 
             foreach(KeyValuePair<string, List<int>> pair in suspended)
             {
-                foreach(int processor in pair.Value)
+                foreach(int process in pair.Value)
                 {
-                    graph.AddEdge(pair.Key, GetProcessorUniqueName(processor, processorNames));
+                    graph.AddEdge(pair.Key, GetProcessUniqueName(process, processNames));
                 }
             }
 
-            return graph.IsCyclic(GetProcessorUniqueName(processorNo, processorNames));
+            return graph.IsCyclic(GetProcessUniqueName(processNo, processNames));
         }
 
-        public ResourceLockType Lock(string name, int processorNo)
+        public ResourceLockType Lock(string name, int processNo)
         {
             if (semaphorValues[name] > 0)
             {
                 semaphorValues[name]--;
 
-                if (!lockedResources.ContainsKey(processorNo))
+                if (!lockedResources.ContainsKey(processNo))
                 {
-                    lockedResources.Add(processorNo, new List<string>());
+                    lockedResources.Add(processNo, new List<string>());
                 }
 
-                lockedResources[processorNo].Add(name);
+                lockedResources[processNo].Add(name);
 
                 return ResourceLockType.AVAILABLE;
             }
 
-            suspended[name].Add(processorNo);
+            suspended[name].Add(processNo);
 
-            if (IsDeadlock(processorNo))
+            if (IsDeadlock(processNo))
             {
                 return ResourceLockType.DEADLOCK;
             }
@@ -130,11 +130,11 @@ namespace ThreadingSimulator.Engine
             return ResourceLockType.LOCKED;
         }
 
-        public ResourceUnlockAvailabilityType Unlock(string name, int processorNo, ref int awake)
+        public ResourceUnlockAvailabilityType Unlock(string name, int processNo, ref int awake)
         {
-            if(lockedResources.ContainsKey(processorNo) && lockedResources[processorNo].Contains(name))
+            if(lockedResources.ContainsKey(processNo) && lockedResources[processNo].Contains(name))
             {
-                lockedResources[processorNo].Remove(name);
+                lockedResources[processNo].Remove(name);
             }
 
             semaphorValues[name]++;
@@ -150,19 +150,19 @@ namespace ThreadingSimulator.Engine
 
         private int GetSuspended(string name)
         {
-            int processorNo = suspended[name][0];
+            int processNo = suspended[name][0];
             suspended[name].RemoveAt(0);
 
-            return processorNo;
+            return processNo;
         }
 
-        /*public List<int> ReleaseAll(int processorNo)
+        /*public List<int> ReleaseAll(int processNo)
         {
             List<int> toAwake = new List<int>();
 
-            if(lockedResources.ContainsKey(processorNo))
+            if(lockedResources.ContainsKey(processNo))
             {
-                foreach (string resource in lockedResources[processorNo])
+                foreach (string resource in lockedResources[processNo])
                 {
                     semaphorValues[resource]++;
 
@@ -172,7 +172,7 @@ namespace ThreadingSimulator.Engine
                     }
                 }
 
-                lockedResources.Remove(processorNo);
+                lockedResources.Remove(processNo);
             }
 
             return toAwake;

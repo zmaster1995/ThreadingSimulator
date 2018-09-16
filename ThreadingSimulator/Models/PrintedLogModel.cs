@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ThreadingSimulator.Enums;
 
 namespace ThreadingSimulator.Models
 {
-    public class SemaphoreLogModel : LogModel
+    class PrintedLogModel
     {
-        public string Semaphore { get; set; }
+        public string Process { get; set; }
+        public string Description { get; set; }
+        public string States { get; set; }
     }
 }

@@ -16,23 +16,7 @@ namespace ThreadingSimulator.Converters
         {
             CommandModel command = value as CommandModel;
 
-            switch (command.Type)
-            {
-                case CommandType.SEMAPHOR_ENTER:
-                    return String.Format("Enter critical region - {0}", command.Variable);
-                case CommandType.SEMAPHOR_EXIT:
-                    return String.Format("Exit critical region - {0}", command.Variable);
-                case CommandType.SHARED_VARIABLE_GET:
-                    return String.Format("Get value of variable {0}", command.Variable);
-                case CommandType.SHARED_VARIABLE_SET:
-                    return String.Format("Set value of variable {0}", command.Variable);
-                case CommandType.SHARED_VARIABLE_CALC_SUM:
-                    return String.Format("Increase value of {0} by {1}", command.Variable, command.Value);
-                case CommandType.SHARED_VARIABLE_CALC_DIFF:
-                    return String.Format("Decrease value of {0} by {1}", command.Variable, command.Value);
-                default:
-                    return "Block of commands";
-            }
+            return CommandTextConverter.GetText(command);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

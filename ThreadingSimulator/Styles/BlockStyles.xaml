@@ -135,6 +135,9 @@
     <SolidColorBrush x:Key="VariableBlockColor">#2980B9</SolidColorBrush>
     <SolidColorBrush x:Key="LoopBlockColor">#8E44AD</SolidColorBrush>
 
+    <SolidColorBrush x:Key="SuspendedColor">#C0392B</SolidColorBrush>
+    <SolidColorBrush x:Key="ActiveColor">#27AE60</SolidColorBrush>
+
     <DataTemplate x:Key="DraggableBlockTemplate">
         <Border Background="{StaticResource BlockColor}"
                 Style="{StaticResource DraggableBorderStyle}">
@@ -200,6 +203,7 @@
                     <Button Width="16"
                         Height="16"
                         Margin="0 0 5 0"
+                        ToolTip="Delete block"
                         Style="{StaticResource ButtonStyle}"
                         Visibility="{Binding ElementName=Control, Path=DataContext.EditMode, Converter={StaticResource BooleanToVisibilityConverter}}"
                         Command="{Binding ElementName=Control, Path=DataContext.DeleteBlockCmd}">
@@ -258,6 +262,7 @@
                           ItemsSource="{Binding Source={StaticResource SemaphorOperationValues}}"></ComboBox>
                     <Button Width="16"
                         Height="16"
+                        ToolTip="Delete block"
                         Visibility="{Binding ElementName=Control, Path=DataContext.EditMode, Converter={StaticResource BooleanToVisibilityConverter}}"
                         Command="{Binding ElementName=Control, Path=DataContext.DeleteBlockCmd}">
                         <Button.CommandParameter>
@@ -286,11 +291,27 @@
 
     <DataTemplate x:Key="VariableBlockTemplate">
         <Grid Background="White">
-            <Border Style="{StaticResource BorderStyle}"
-                    Background="{StaticResource VariableBlockColor}"
-                    Width="220"
+            <Border Background="{StaticResource VariableBlockColor}"
                     Padding="0 5 0 0"
                     HorizontalAlignment="Left">
+                <Border.Style>
+                    <Style TargetType="Border" BasedOn="{StaticResource BorderStyle}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.SET}">
+                                <Setter Property="Width" Value="240"></Setter>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.GET}">
+                                <Setter Property="Width" Value="180"></Setter>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.INCREASE}">
+                                <Setter Property="Width" Value="280"></Setter>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.DECREASE}">
+                                <Setter Property="Width" Value="280"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
                 <StackPanel>
                     <Canvas>
                         <Canvas.LayoutTransform>
@@ -299,41 +320,41 @@
                                 <ScaleTransform ScaleX="0.6" ScaleY="0.6"></ScaleTransform>
                             </TransformGroup>
                         </Canvas.LayoutTransform>
-                        <Ellipse xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="142" Width="23.8" Height="23.5" Name="path3684" Fill="{StaticResource VariableBlockColor}" StrokeThickness="0.26458332">
+                        <Ellipse xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Top="-77" Width="23.8" Height="23.5" Name="path3684" Fill="{StaticResource VariableBlockColor}" StrokeThickness="0.26458332">
                             <Ellipse.Style>
                                 <Style TargetType="Ellipse">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.GET}">
-                                            <Setter Property="Canvas.Top" Value="-77"></Setter>
+                                            <Setter Property="Canvas.Left" Value="110"></Setter>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.SET}">
-                                            <Setter Property="Canvas.Top" Value="-127"></Setter>
+                                            <Setter Property="Canvas.Left" Value="160"></Setter>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.INCREASE}">
-                                            <Setter Property="Canvas.Top" Value="-127"></Setter>
+                                            <Setter Property="Canvas.Left" Value="192"></Setter>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.DECREASE}">
-                                            <Setter Property="Canvas.Top" Value="-127"></Setter>
+                                            <Setter Property="Canvas.Left" Value="192"></Setter>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
                             </Ellipse.Style>
                         </Ellipse>
-                        <Path Fill="{StaticResource VariableBlockColor}" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="224" Name="path3720" StrokeLineJoin="Miter" StrokeStartLineCap="Flat" StrokeEndLineCap="Flat">
+                        <Path Fill="{StaticResource VariableBlockColor}" Canvas.Top="-225.7" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Name="path3720" StrokeLineJoin="Miter" StrokeStartLineCap="Flat" StrokeEndLineCap="Flat">
                             <Path.Style>
                                 <Style TargetType="Path">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.GET}">
-                                            <Setter Property="Canvas.Top" Value="-225.7"></Setter>
+                                            <Setter Property="Canvas.Left" Value="192"></Setter>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.SET}">
-                                            <Setter Property="Canvas.Top" Value="-275.7"></Setter>
+                                            <Setter Property="Canvas.Left" Value="242"></Setter>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.INCREASE}">
-                                            <Setter Property="Canvas.Top" Value="-275.7"></Setter>
+                                            <Setter Property="Canvas.Left" Value="274"></Setter>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.DECREASE}">
-                                            <Setter Property="Canvas.Top" Value="-275.7"></Setter>
+                                            <Setter Property="Canvas.Left" Value="274"></Setter>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -342,21 +363,21 @@
                                 <PathGeometry Figures="m -80.453499 164.96885 c 0 0 6.280833 8.55263 0 11.8935 -6.280835 3.34086 20.713388 1.20271 15.902538 -4.94449" FillRule="NonZero"/>
                             </Path.Data>
                         </Path>
-                        <Path Fill="{StaticResource VariableBlockColor}" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Canvas.Left="224" Name="path37201" StrokeLineJoin="Miter" StrokeStartLineCap="Flat" StrokeEndLineCap="Flat">
+                        <Path Fill="{StaticResource VariableBlockColor}" Canvas.Top="-225.7" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Name="path37201" StrokeLineJoin="Miter" StrokeStartLineCap="Flat" StrokeEndLineCap="Flat">
                             <Path.Style>
                                 <Style TargetType="Path">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.GET}">
-                                            <Setter Property="Canvas.Top" Value="-225.7"></Setter>
+                                            <Setter Property="Canvas.Left" Value="192"></Setter>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.SET}">
-                                            <Setter Property="Canvas.Top" Value="-275.7"></Setter>
+                                            <Setter Property="Canvas.Left" Value="242"></Setter>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.INCREASE}">
-                                            <Setter Property="Canvas.Top" Value="-275.7"></Setter>
+                                            <Setter Property="Canvas.Left" Value="274"></Setter>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.DECREASE}">
-                                            <Setter Property="Canvas.Top" Value="-275.7"></Setter>
+                                            <Setter Property="Canvas.Left" Value="274"></Setter>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -376,12 +397,33 @@
                         <ComboBox Margin="10 5 0 5"
                               Name="VariableOp"
                               SelectedItem="{Binding VariableOperationType}" 
-                             IsEnabled="{Binding ElementName=Control, Path=DataContext.EditMode}"
+                              IsEnabled="{Binding ElementName=Control, Path=DataContext.EditMode}"
                               ItemsSource="{Binding Source={StaticResource VariableOperationValues}}"></ComboBox>
+                        <Grid>
+                            <Grid.Style>
+                                <Style TargetType="Grid">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.GET}">
+                                            <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Style>
+                            <TextBlock Margin="5 7 0 0"
+                               Text="to"></TextBlock>
+                            <extra:IntegerUpDown Margin="20 5 0 5"
+                                         Increment="1"
+                                         Width="40"
+                                         IsEnabled="{Binding ElementName=Control, Path=DataContext.EditMode}"
+                                         Value="{Binding Value}"></extra:IntegerUpDown>
+                        </Grid>
                         <Button Width="16"
-                            Height="16"
-                            Visibility="{Binding ElementName=Control, Path=DataContext.EditMode, Converter={StaticResource BooleanToVisibilityConverter}}"
-                            Command="{Binding ElementName=Control, Path=DataContext.DeleteBlockCmd}">
+                                Height="16"
+                                Margin="5 0"
+                                ToolTip="Delete block"
+                                Style="{StaticResource ButtonStyle}"
+                                Visibility="{Binding ElementName=Control, Path=DataContext.EditMode, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                Command="{Binding ElementName=Control, Path=DataContext.DeleteBlockCmd}">
                             <Button.CommandParameter>
                                 <MultiBinding Converter="{StaticResource MultivalueParameterConverter}">
                                     <Binding RelativeSource="{RelativeSource Self}" Path="DataContext"/>
@@ -391,43 +433,25 @@
                             <Button.Content>
                                 <Image Source="{StaticResource Delete}"></Image>
                             </Button.Content>
-                            <Button.Style>
+                            <!--<Button.Style>
                                 <Style TargetType="Button" BasedOn="{StaticResource ButtonStyle}">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding SelectedItem, ElementName=VariableOp}" Value="{x:Static models:VariableOperationType.GET}">
-                                            <Setter Property="Margin" Value="45 0 5 0"></Setter>
+                                            <Setter Property="Margin" Value="5 0 5 0"></Setter>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding SelectedItem, ElementName=VariableOp}" Value="{x:Static models:VariableOperationType.SET}">
-                                            <Setter Property="Margin" Value="47 0 5 0"></Setter>
+                                            <Setter Property="Margin" Value="5 0 5 0"></Setter>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding SelectedItem, ElementName=VariableOp}" Value="{x:Static models:VariableOperationType.INCREASE}">
-                                            <Setter Property="Margin" Value="13 0 5 0"></Setter>
+                                            <Setter Property="Margin" Value="0 0 5 0"></Setter>
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding SelectedItem, ElementName=VariableOp}" Value="{x:Static models:VariableOperationType.DECREASE}">
-                                            <Setter Property="Margin" Value="10 0 5 0"></Setter>
+                                            <Setter Property="Margin" Value="0 0 5 0"></Setter>
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </Button.Style>
+                            </Button.Style>-->
                         </Button>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <StackPanel.Style>
-                            <Style TargetType="StackPanel">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.GET}">
-                                        <Setter Property="Visibility" Value="Collapsed"></Setter>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </StackPanel.Style>
-                        <TextBlock Margin="5 7 0 0"
-                               Text="Value: "></TextBlock>
-                        <extra:IntegerUpDown Margin="10 5 0 5"
-                                         Increment="1"
-                                         Width="40"
-                                         IsEnabled="{Binding ElementName=Control, Path=DataContext.EditMode}"
-                                         Value="{Binding Value}"></extra:IntegerUpDown>
                     </StackPanel>
                 </StackPanel>
             </Border>
@@ -445,6 +469,7 @@
                     <MultiBinding Converter="{StaticResource LoopBlockWidthConverter}">
                         <Binding ElementName="InnerListBox"></Binding>
                         <Binding ElementName="InnerListBox" Path="ActualHeight"></Binding>
+                        <Binding ElementName="InnerListBox" Path="ItemsSource"></Binding>
                     </MultiBinding>
                 </Border.Width>
                 <StackPanel MinWidth="170">
@@ -538,6 +563,7 @@
                             Height="16"
                             HorizontalAlignment="Right"
                             Margin="50 0 5 0"
+                            ToolTip="Delete block"
                             Style="{StaticResource ButtonStyle}"
                             Visibility="{Binding ElementName=Control, Path=DataContext.EditMode, Converter={StaticResource BooleanToVisibilityConverter}}"
                             Command="{Binding ElementName=Control, Path=DataContext.DeleteBlockCmd}">
@@ -599,6 +625,7 @@
                     <Binding Source="{StaticResource Resources}"></Binding>
                     <Binding ElementName="Border" Path="DataContext.DisplayColor"></Binding>
                     <Binding ElementName="Simulation" Path="Tag"></Binding>
+                    <Binding ElementName="Active" Path="Tag"></Binding>
                 </MultiBinding>
             </Border.Background>
             <!--<Border.CornerRadius>
@@ -609,8 +636,7 @@
                 </MultiBinding>
             </Border.CornerRadius>-->
             <Label Content="{Binding Converter={StaticResource CommandDisplayTextConverter}}"
-                   ToolTip="{Binding Converter={StaticResource CommandDisplayTextConverter}}"
-                   Foreground="White">
+                   ToolTip="{Binding Converter={StaticResource CommandDisplayTextConverter}}">
                 <!--<Label.Style>
                     <Style TargetType="Label">
                         <Style.Triggers>
@@ -621,6 +647,12 @@
                     </Style>
                 </Label.Style>-->
             </Label>
+        </Border>
+    </DataTemplate>
+
+    <DataTemplate x:Key="DispatcherValueTemplate">
+        <Border BorderBrush="Gray" BorderThickness="1" MaxWidth="30" MaxHeight="22">
+            <TextBlock Text="{Binding}" Padding="5 2"></TextBlock>
         </Border>
     </DataTemplate>
 </ResourceDictionary>

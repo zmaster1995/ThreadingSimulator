@@ -8,9 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assets/icons8-left-64.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assets/icons8-pause-button-48.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assets/icons8-restart-48.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assets/icons8-right-64.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("assets/icons8-synchronize-64.png")]
 
 

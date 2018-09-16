@@ -12,8 +12,29 @@ namespace ThreadingSimulator.Models
 {
     public class LoopBlockModel : BlockModel
     {
+        private ObservableCollection<BlockModel> children;
+
         public int Iterations { get; set; } = 1;
-        public ObservableCollection<BlockModel> Children { get; set; }
+        public ObservableCollection<BlockModel> Children
+        {
+            get
+            {
+                return children;
+            }
+            set
+            {
+                if(children==null)
+                {
+                    foreach(BlockModel bm in value)
+                    {
+                        Subscribe(bm);
+                    }
+                }
+
+                children = value;
+                OnPropertyChanged();
+            }
+        }
 
         [XmlIgnore]
         [JsonIgnore]
@@ -47,10 +68,10 @@ namespace ThreadingSimulator.Models
             if(Children == null)
             {
                 Children = new ObservableCollection<BlockModel>();
-
-                OnPropertyChanged(nameof(Children));
             }
 
+            Subscribe(block);
+            
             Children.Insert(position, block);
 
             RecalculateZIndex();
@@ -74,5 +95,20 @@ namespace ThreadingSimulator.Models
             }
         }
 
+        private void Subscribe(BlockModel bm)
+        {
+            if(bm is VariableBlockModel)
+            {
+                bm.PropertyChanged += Bm_PropertyChanged;
+            }
+        }
+
+        private void Bm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if(e.PropertyName == "VariableOperationType")
+            {
+                Children = new ObservableCollection<BlockModel>(Children);
+            }
+        }
     }
 }

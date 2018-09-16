@@ -25,8 +25,8 @@ namespace ThreadingSimulator.Engine
             variableStack = new VariableStack();
             criticalRegionControl = new CriticalRegionControl();
             initialized = false;
-            logs = new List<LogModel>();
-            runningProcessors = new List<int>();
+            logs = new List<BaseLogModel>();
+            runningProcesses = new List<int>();
             randomGenerator = new Random();
             takenValues = new Dictionary<int, int>();
         }
@@ -39,14 +39,14 @@ namespace ThreadingSimulator.Engine
         private bool initialized;
         private bool executionFinished;
         private bool awakeCommand;
-        private int[] processorPositions;
-        private List<LogModel> logs;
-        private List<int> runningProcessors;
+        private int[] processPositions;
+        private List<BaseLogModel> logs;
+        private List<int> runningProcesses;
         private Random randomGenerator;
         private int dispatcherPos;
         private int[] dispatcher;
-        private List<int> processorsToAwake;
-        private int runningProcessorsCount;
+        private List<int> processesToAwake;
+        private int runningProcessesCount;
         private Dictionary<int, int> takenValues;
 
         public void Init(ExecutableProgramModel program, ExecutionSettingsModel settings)
@@ -57,26 +57,26 @@ namespace ThreadingSimulator.Engine
             dispatcherPos = 0;
             executionFinished = false;
 
-            processorsToAwake = new List<int>();
+            processesToAwake = new List<int>();
 
-            processorPositions = new int[program.ProcessorCount];
-            runningProcessorsCount = program.ProcessorCount;
+            processPositions = new int[program.ProcessCount];
+            runningProcessesCount = program.ProcessCount;
 
             logs.Clear();
             takenValues.Clear();
             variableStack.Reset();
             criticalRegionControl.Reset();
 
-            runningProcessors.Clear();
+            runningProcesses.Clear();
 
-            for (int i = 0; i < program.ProcessorCount; i++) 
+            for (int i = 0; i < program.ProcessCount; i++) 
             {
                 takenValues.Add(i, 0);
-                runningProcessors.Add(i);
-                processorPositions[i] = 0;
+                runningProcesses.Add(i);
+                processPositions[i] = 0;
             }
 
-            dispatcher = settings.Dispatcher.Select(x => x.Value - 1).ToArray();
+            dispatcher = settings.Dispatcher.Select(x=>x-1).ToArray();
             variableStack.InitVariables(settings.Variables);
             criticalRegionControl.InitSemaphores(settings.Semaphores);
 
@@ -115,13 +115,13 @@ namespace ThreadingSimulator.Engine
         private void ExecuteInternal()
         {
             int value;
-            int processorNo;
+            int processNo;
             CommandModel command;
             bool deadlock = false;
 
-            while (runningProcessorsCount > 0)
+            while (runningProcessesCount > 0)
             {
-                processorNo = ChooseProcessor(ref deadlock);
+                processNo = ChooseProcess(ref deadlock);
 
                 if(deadlock)
                 {
@@ -129,91 +129,88 @@ namespace ThreadingSimulator.Engine
                     return;
                 }
 
-                command = program.Processors[processorNo].Commands[processorPositions[processorNo]];
+                command = program.Processes[processNo].Commands[processPositions[processNo]];
                 
                 switch (command.Type)
                 {
                     case CommandType.SEMAPHOR_ENTER:
-                        ResourceLockType resLock = criticalRegionControl.Lock(command.Variable, processorNo);
+                        ResourceLockType resLock = criticalRegionControl.Lock(command.Variable, processNo);
 
                         if (resLock == ResourceLockType.AVAILABLE)
                         {                      
-                            processorPositions[processorNo]++;
-                            AddLog(processorNo, LogType.ENTER_REGION, command.Variable);
+                            processPositions[processNo]++;
+                            AddLog(LogType.ENTER_REGION, command.Variable, processNo, command);
                         }
                         else if (resLock == ResourceLockType.LOCKED)
                         {
-                            runningProcessors.Remove(processorNo);
-                            AddLog(processorNo, LogType.SUSPENDED, command.Variable);
+                            runningProcesses.Remove(processNo);
+                            AddLog(LogType.SUSPENDED, command.Variable, processNo, command);
                         }
                         else
                         {
-                            AddLog(processorNo, LogType.DEADLOCK);
+                            AddLog(LogType.DEADLOCK);
                             return;
                         }
                         break;
                     case CommandType.SEMAPHOR_EXIT:
                         int toAwake = -1;
 
-                        ResourceUnlockAvailabilityType resUnlock = criticalRegionControl.Unlock(command.Variable, processorNo, ref toAwake);
+                        ResourceUnlockAvailabilityType resUnlock = criticalRegionControl.Unlock(command.Variable, processNo, ref toAwake);
 
                         if (resUnlock == ResourceUnlockAvailabilityType.OK_AWAKE_OTHER)
                         {
-                            processorsToAwake.Add(toAwake);
+                            processesToAwake.Add(toAwake);
                         }
 
-                        processorPositions[processorNo]++;
-                        AddLog(processorNo, LogType.EXIT_REGION, command.Variable);
+                        processPositions[processNo]++;
+                        AddLog(LogType.EXIT_REGION, command.Variable, processNo, command);
                         break;
                     case CommandType.OTHER:
-                        processorPositions[processorNo]++;
-                        AddLog(processorNo, LogType.MOVE);
+                        processPositions[processNo]++;
+                        AddLog(LogType.MOVE, processNo, command);
                         break;
                     case CommandType.SHARED_VARIABLE_CALC_DIFF:
-                        takenValues[processorNo] -= command.Value.Value;
+                        takenValues[processNo] -= command.Value.Value;
 
-                        processorPositions[processorNo]++;
-                        AddLog(processorNo, LogType.CALC_VALUE, command.Variable, takenValues[processorNo]);
+                        processPositions[processNo]++;
+                        AddLog(LogType.CALC_VALUE, command.Variable, takenValues[processNo], processNo, command);
                         break;
                     case CommandType.SHARED_VARIABLE_CALC_SUM:
-                        takenValues[processorNo] += command.Value.Value;
+                        takenValues[processNo] += command.Value.Value;
 
-                        processorPositions[processorNo]++;
-                        AddLog(processorNo, LogType.CALC_VALUE, command.Variable, takenValues[processorNo]);
+                        processPositions[processNo]++;
+                        AddLog(LogType.CALC_VALUE, command.Variable, takenValues[processNo], processNo, command);
                         break;
                     case CommandType.SHARED_VARIABLE_GET:
                         value = variableStack.GetValue(command.Variable);
-                        takenValues[processorNo] = value;
+                        takenValues[processNo] = value;
 
-                        processorPositions[processorNo]++;
-                        AddLog(processorNo, LogType.GET_VALUE, command.Variable, value);
+                        processPositions[processNo]++;
+                        AddLog(LogType.GET_VALUE, command.Variable, value, processNo, command);
                         break;
                     case CommandType.SHARED_VARIABLE_SET:
-                        value = command.Value.HasValue ? command.Value.Value : takenValues[processorNo];
+                        value = command.Value.HasValue ? command.Value.Value : takenValues[processNo];
                         variableStack.SetValue(command.Variable, value);
 
-                        processorPositions[processorNo]++;
-                        AddLog(processorNo, LogType.SET_VALUE, command.Variable, value);
+                        processPositions[processNo]++;
+                        AddLog(LogType.SET_VALUE, command.Variable, value, processNo, command);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
 
-                if (processorPositions[processorNo] == program.Processors[processorNo].CommandCount)
+                if (processPositions[processNo] == program.Processes[processNo].CommandCount)
                 {
-                    runningProcessorsCount--;
-                    runningProcessors.Remove(processorNo);
-                    //List<int> toAwake = criticalRegionControl.ReleaseAll(processorNo);
+                    runningProcessesCount--;
+                    runningProcesses.Remove(processNo);
+                    //List<int> toAwake = criticalRegionControl.ReleaseAll(processNo);
 
-                    //processorsToAwake.AddRange(toAwake);
-
-
-                    AddLog(processorNo, LogType.EXEC_FINISHED);
+                    //processesToAwake.AddRange(toAwake);
                 }
             }
         }
 
-        public List<LogModel> GetLogs()
+        public List<BaseLogModel> GetLogs()
         {
             if (!executionFinished)
             {
@@ -225,63 +222,75 @@ namespace ThreadingSimulator.Engine
 
         private void AddLog(LogType type)
         {
+            logs.Add(new BaseLogModel()
+            {
+                Type = type
+            });
+        }
+
+        private void AddLog(LogType type, int processNo)
+        {
             logs.Add(new LogModel()
             {
-                Type = type
+                Type = type,
+                Process = processNo
             });
         }
 
-        private void AddLog(int processorNo, LogType type)
+        private void AddLog(LogType type, int processNo, CommandModel command)
         {
-            logs.Add(new ProcessorLogModel()
+            logs.Add(new LogModel()
             {
-                Processor = processorNo,
-                Type = type
+                Type = type,
+                Process = processNo,
+                Command = command
             });
         }
 
-        private void AddLog(int processorNo, LogType type, string semaphore)
+        private void AddLog(LogType type, string semaphore, int processNo, CommandModel command)
         {
             logs.Add(new SemaphoreLogModel()
             {
-                Processor = processorNo,
+                Process = processNo,
                 Type = type,
-                Semaphore = semaphore
+                Semaphore = semaphore,
+                Command = command
             });
         }
 
-        private void AddLog(int processorNo, LogType type, string variable, int value)
+        private void AddLog(LogType type, string variable, int value, int processNo, CommandModel command)
         {
-            logs.Add(new ValuedLogModel()
+            logs.Add(new VariableLogModel()
             {
-                Processor = processorNo,
+                Process = processNo,
                 Type = type,
                 Value = value,
-                Variable = variable
+                Variable = variable,
+                Command = command
             });
         }
 
-        private int ChooseProcessor(ref bool deadlock)
+        private int ChooseProcess(ref bool deadlock)
         {
-            if(processorsToAwake.Any())
+            if(processesToAwake.Any())
             {
-                int processor = processorsToAwake[0];
+                int process = processesToAwake[0];
 
                 awakeCommand = !awakeCommand;
 
                 if(awakeCommand)
                 {
-                    processorsToAwake.RemoveAt(0);
+                    processesToAwake.RemoveAt(0);
                 }
                 else
                 {
-                    runningProcessors.Add(processor);
+                    runningProcesses.Add(process);
                 }
 
-                return processor;
+                return process;
             }
 
-            if(!runningProcessors.Any())
+            if(!runningProcesses.Any())
             {
                 deadlock = true;
                 return -1;
@@ -289,41 +298,20 @@ namespace ThreadingSimulator.Engine
 
             while (dispatcherPos < dispatcher.Length)
             {
-                int processorNo = dispatcher[dispatcherPos];
+                int processNo = dispatcher[dispatcherPos];
                 dispatcherPos++;
 
-                if (runningProcessors.Contains(processorNo))
+                if (runningProcesses.Contains(processNo))
                 {
-                    return processorNo;
-                }
-            };
-
-            return runningProcessors[randomGenerator.Next(runningProcessors.Count)];
-        }
-
-        public void PrintLogs()
-        {
-            Console.WriteLine("---START---");
-
-            foreach (LogModel logModel in logs)
-            {
-                ProcessorLogModel log = logModel as ProcessorLogModel;
-
-                if(logModel.Type == LogType.GET_VALUE || logModel.Type == LogType.SET_VALUE || logModel.Type == LogType.CALC_VALUE)
-                {
-                    Console.WriteLine(String.Format("Processor: {0}, Type: {1}, Value: {2}", log.Processor, log.Type, (log as ValuedLogModel).Value));
-                }
-                else if(logModel.Type == LogType.ALL_SUSPENDED)
-                {
-                    Console.WriteLine(String.Format("Type: {0}", logModel.Type));
+                    return processNo;
                 }
                 else
                 {
-                    Console.WriteLine(String.Format("Processor: {0}, Type: {1}", log.Processor, log.Type));
+                    AddLog(LogType.DISPATCHER_SKIP, processNo);
                 }
-            }
+            };
 
-            Console.WriteLine("---END---");
+            return runningProcesses[randomGenerator.Next(runningProcesses.Count)];
         }
     }
 }
