@@ -139,7 +139,7 @@
                       HorizontalScrollBarVisibility="Auto"
                       MaxHeight="450"
                       Grid.Row="1"
-                      Grid.ColumnSpan="4">
+                      Grid.ColumnSpan="1">
             <ItemsControl Name="ItemsControl"
                           ItemsSource="{Binding Program.Processes}">
                 <ItemsControl.ItemsPanel>

@@ -14,10 +14,10 @@ namespace ThreadingSimulator.Enums
         GET_VALUE,
         SET_VALUE,
         CALC_VALUE,
-        EXEC_FINISHED,
         ENTER_REGION,
         EXIT_REGION,
         ALL_SUSPENDED,
-        DISPATCHER_SKIP
+        DISPATCHER_SKIP,
+        AWAKE_PROCESS
     }
 }

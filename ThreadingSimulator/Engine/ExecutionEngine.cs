@@ -155,15 +155,16 @@ namespace ThreadingSimulator.Engine
                     case CommandType.SEMAPHOR_EXIT:
                         int toAwake = -1;
 
-                        ResourceUnlockAvailabilityType resUnlock = criticalRegionControl.Unlock(command.Variable, processNo, ref toAwake);
-
-                        if (resUnlock == ResourceUnlockAvailabilityType.OK_AWAKE_OTHER)
-                        {
-                            processesToAwake.Add(toAwake);
-                        }
-
+                        ResourceUnlockType resUnlock = criticalRegionControl.Unlock(command.Variable, processNo, ref toAwake);
+                        
                         processPositions[processNo]++;
                         AddLog(LogType.EXIT_REGION, command.Variable, processNo, command);
+
+                        if (resUnlock == ResourceUnlockType.OK_AWAKE_OTHER)
+                        {
+                            processesToAwake.Add(toAwake);
+                            AddLog(LogType.AWAKE_PROCESS, toAwake);
+                        }
                         break;
                     case CommandType.OTHER:
                         processPositions[processNo]++;
@@ -203,9 +204,6 @@ namespace ThreadingSimulator.Engine
                 {
                     runningProcessesCount--;
                     runningProcesses.Remove(processNo);
-                    //List<int> toAwake = criticalRegionControl.ReleaseAll(processNo);
-
-                    //processesToAwake.AddRange(toAwake);
                 }
             }
         }

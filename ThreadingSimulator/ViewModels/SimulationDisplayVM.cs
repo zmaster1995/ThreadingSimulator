@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
@@ -34,7 +35,8 @@ namespace ThreadingSimulator.ViewModels
         private int[] processPositions;
         private ObservableCollection<PrintedLogModel> logOutput;
         private bool[] isSuspended;
-        
+
+        public Action<int> Focus;
         public Action Close;
         public bool NewSimulation { get; set; }
 
@@ -150,7 +152,15 @@ namespace ThreadingSimulator.ViewModels
 
             printLog.States = GetStates();
 
-            LogOutput.Add(printLog);
+            ShowLog(printLog);
+        }
+
+        private void ShowLog(PrintedLogModel printLog)
+        {
+            App.Current.Dispatcher.Invoke(() =>
+            {
+                LogOutput.Add(printLog);
+            });
         }
 
         public void GenerateLogOutput(LogModel logModel)
@@ -164,11 +174,15 @@ namespace ThreadingSimulator.ViewModels
             {
                 printLog.Description = "----------";
             }
-            else if(logModel.Type == LogType.DEADLOCK || logModel.Type==LogType.ALL_SUSPENDED)
+            else if (logModel.Type == LogType.DEADLOCK || logModel.Type == LogType.ALL_SUSPENDED)
             {
                 printLog.Description = "Deadlock has been detected";
             }
-            else if(logModel is SemaphoreLogModel)
+            else if (logModel.Type == LogType.AWAKE_PROCESS)
+            {
+                printLog.Description = "Process has been deblocked";
+            }
+            else if (logModel is SemaphoreLogModel)
             {
                 SemaphoreLogModel semLog = logModel as SemaphoreLogModel;
 
@@ -192,8 +206,7 @@ namespace ThreadingSimulator.ViewModels
             }
 
             printLog.States = GetStates();
-
-            LogOutput.Add(printLog);
+            ShowLog(printLog);
         }
 
         private string GetStates()
@@ -246,11 +259,16 @@ namespace ThreadingSimulator.ViewModels
             VariableLogModel valuedLog;
             SemaphoreLogModel semaphoreLog;
 
-            if(log.Type == LogType.DEADLOCK || log.Type == LogType.ALL_SUSPENDED)
+            if (logModel != null)
+            {
+                Focus(logModel.Process);
+            }
+
+            if (log.Type == LogType.DEADLOCK || log.Type == LogType.ALL_SUSPENDED)
             {
                 GenerateDeadlockLog();
             }
-            else if (log.Type != LogType.EXEC_FINISHED)
+            else
             {
                 GenerateLogOutput(logModel);
             }
@@ -273,14 +291,6 @@ namespace ThreadingSimulator.ViewModels
                 semaphore.Value--;
 
                 SemaphoreValues = SemaphoreValues.ToList();
-
-                if (IsSuspended[semaphoreLog.Process])
-                {
-                    IsSuspended[semaphoreLog.Process] = false;
-                    IsSuspended = IsSuspended.ToArray();
-
-                    return;
-                }
             }
             else if (log.Type == LogType.EXIT_REGION)
             {
@@ -297,30 +307,23 @@ namespace ThreadingSimulator.ViewModels
 
                 IsSuspended[semaphoreLog.Process] = true;
                 IsSuspended = IsSuspended.ToArray();
+
+                return;
             }
-            else if(log.Type==LogType.DEADLOCK)
+            else if(log.Type == LogType.AWAKE_PROCESS)
+            {
+                IsSuspended[logModel.Process] = false;
+                IsSuspended = IsSuspended.ToArray();
+
+                return;
+            }
+            else if(log.Type==LogType.DEADLOCK || log.Type == LogType.ALL_SUSPENDED)
             {
                 return;
             }
 
-            if(log.Type!=LogType.ALL_SUSPENDED)
-            {   
-                processPositions[logModel.Process]++;
-                DisplayColor(logModel.Process, processPositions[logModel.Process]);
-            }
-        }
-
-        private LogType? GetPreviousCommand(int process)
-        {
-            for (int i = CurrentLog - 1; i >= 0; i--) 
-            {
-                if(logs[i] is LogModel && (logs[i] as LogModel).Process == process)
-                {
-                    return logs[i].Type;
-                }
-            }
-
-            return null;
+            processPositions[logModel.Process]++;
+            DisplayColor(logModel.Process, processPositions[logModel.Process]);
         }
 
         public void UndoCommand(BaseLogModel log)
@@ -329,10 +332,12 @@ namespace ThreadingSimulator.ViewModels
             VariableLogModel valuedLog;
             SemaphoreLogModel semaphoreLog;
 
-            if (log.Type != LogType.EXEC_FINISHED)
+            if (logModel != null)
             {
-                LogOutput.Remove(LogOutput.Last());
+                Focus(logModel.Process);
             }
+
+            LogOutput.Remove(LogOutput.Last());
 
             if (log.Type == LogType.SET_VALUE)
             {
@@ -351,14 +356,6 @@ namespace ThreadingSimulator.ViewModels
                 InitialValueModel semaphore = SemaphoreValues.First(x => x.Name == semaphoreLog.Semaphore);
                 semaphore.Value++;
 
-                if(GetPreviousCommand(semaphoreLog.Process) == LogType.SUSPENDED)
-                {
-                    IsSuspended[semaphoreLog.Process] = true;
-                    IsSuspended = IsSuspended.ToArray();
-
-                    return;
-                }
-
                 SemaphoreValues = SemaphoreValues.ToList();
             }
             else if(log.Type == LogType.SUSPENDED)
@@ -367,6 +364,15 @@ namespace ThreadingSimulator.ViewModels
 
                 IsSuspended[semaphoreLog.Process] = false;
                 IsSuspended = IsSuspended.ToArray();
+
+                return;
+            }
+            else if(log.Type == LogType.AWAKE_PROCESS)
+            {
+                IsSuspended[logModel.Process] = true;
+                IsSuspended = IsSuspended.ToArray();
+
+                return;
             }
             else if (log.Type == LogType.EXIT_REGION)
             {
@@ -377,17 +383,13 @@ namespace ThreadingSimulator.ViewModels
                
                 SemaphoreValues = SemaphoreValues.ToList();
             }
-            else if (log.Type == LogType.DEADLOCK)
+            else if (log.Type == LogType.DEADLOCK || log.Type == LogType.ALL_SUSPENDED)
             {
                 return;
             }
 
-            if (log.Type != LogType.ALL_SUSPENDED)
-            {
-                processPositions[logModel.Process]--;
-
-                DisplayColor(logModel.Process, processPositions[logModel.Process]);
-            }
+            processPositions[logModel.Process]--;
+            DisplayColor(logModel.Process, processPositions[logModel.Process]);
         }
 
         public void PreviousLogCmd_Execute(object o)

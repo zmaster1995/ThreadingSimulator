@@ -130,7 +130,7 @@ namespace ThreadingSimulator.Engine
             return ResourceLockType.LOCKED;
         }
 
-        public ResourceUnlockAvailabilityType Unlock(string name, int processNo, ref int awake)
+        public ResourceUnlockType Unlock(string name, int processNo, ref int awake)
         {
             if(lockedResources.ContainsKey(processNo) && lockedResources[processNo].Contains(name))
             {
@@ -142,10 +142,10 @@ namespace ThreadingSimulator.Engine
             if (suspended.ContainsKey(name) && suspended[name].Any())
             {
                 awake = GetSuspended(name);
-                return ResourceUnlockAvailabilityType.OK_AWAKE_OTHER;
+                return ResourceUnlockType.OK_AWAKE_OTHER;
             }
 
-            return ResourceUnlockAvailabilityType.OK;
+            return ResourceUnlockType.OK;
         }
 
         private int GetSuspended(string name)

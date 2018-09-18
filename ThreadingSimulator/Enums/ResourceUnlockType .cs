@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ThreadingSimulator.Enums
 {
-    enum ResourceUnlockAvailabilityType
+    enum ResourceUnlockType
     {
         OK,
         OK_AWAKE_OTHER

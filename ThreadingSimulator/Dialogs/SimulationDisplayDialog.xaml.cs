@@ -33,6 +33,12 @@ namespace ThreadingSimulator.Dialogs
         private void SimulationDisplayDialog_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             (DataContext as SimulationDisplayVM).Close += Close;
+            (DataContext as SimulationDisplayVM).Focus += Focus;
+        }
+
+        private void Focus(int processNo)
+        {
+            App.Current.Dispatcher.Invoke((ItemsControl.ItemContainerGenerator.ContainerFromIndex(processNo) as ContentPresenter).BringIntoView);
         }
 
         private void SimulationDisplayDialog_Closing(object sender, System.ComponentModel.CancelEventArgs e)

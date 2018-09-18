@@ -9,8 +9,8 @@ namespace ThreadingSimulator.Engine
     class DeadlockDetectionGraph
     {
         private Dictionary<string, List<string>> graphInternal;
-        Dictionary<string, bool> visited;
-        Dictionary<string, bool> recStack;
+        private Dictionary<string, bool> visited;
+        private Dictionary<string, bool> recStack;
 
         public DeadlockDetectionGraph(List<string> nodes)
         {
