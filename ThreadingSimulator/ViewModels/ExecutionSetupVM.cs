@@ -156,7 +156,7 @@ namespace ThreadingSimulator.ViewModels
         {
             try
             {
-                int[] dispatcherValues = text.Trim().ToArray().Select(x => Int32.Parse(x.ToString())).ToArray();
+                int[] dispatcherValues = text.Length == 0 ? new int[0] : text.Trim().ToArray().Select(x => Int32.Parse(x.ToString())).ToArray();
 
                 if (ValidateValues(dispatcherValues))
                 {

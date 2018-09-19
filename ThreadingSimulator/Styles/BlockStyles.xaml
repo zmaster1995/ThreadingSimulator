@@ -410,7 +410,32 @@
                                 </Style>
                             </Grid.Style>
                             <TextBlock Margin="5 7 0 0"
-                               Text="to"></TextBlock>
+                               Text="to">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.INCREASE}">
+                                                <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.DECREASE}">
+                                                <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                            <TextBlock Margin="5 7 0 0"
+                               Text="by">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding VariableOperationType}" Value="{x:Static models:VariableOperationType.SET}">
+                                                <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
                             <extra:IntegerUpDown Margin="20 5 0 5"
                                          Increment="1"
                                          Width="40"

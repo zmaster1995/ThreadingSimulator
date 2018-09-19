@@ -48,13 +48,16 @@ namespace ThreadingSimulator.Dialogs
 
         private void LogConsole_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            internalTransition = true;
+            if(e.VerticalChange == 0)
+            {
+                internalTransition = true;
 
-            LogConsole.SelectedIndex = LogConsole.Items.Count - 1;
-            LogConsole.ScrollIntoView(LogConsole.SelectedItem);
-            LogConsole.SelectedIndex = -1;
+                LogConsole.SelectedIndex = LogConsole.Items.Count - 1;
+                LogConsole.ScrollIntoView(LogConsole.SelectedItem);
+                LogConsole.SelectedIndex = -1;
 
-            internalTransition = false;
+                internalTransition = false;
+            }
         }
 
         private void LogConsole_SelectionChanged(object sender, SelectionChangedEventArgs e)

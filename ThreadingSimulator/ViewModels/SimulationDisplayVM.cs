@@ -213,12 +213,12 @@ namespace ThreadingSimulator.ViewModels
         {
             StringBuilder sb = new StringBuilder();
 
-            if(variables.Any())
+            if(VariableValues.Any())
             {
                 bool first = true;
                 sb.Append("Variables: ");
 
-                foreach (InitialValueModel ivm in variables)
+                foreach (InitialValueModel ivm in VariableValues)
                 {
                     if (!first)
                     {
@@ -232,12 +232,12 @@ namespace ThreadingSimulator.ViewModels
 
                 sb.Append(";\t\t");
             }
-            if (semaphores.Any())
+            if (SemaphoreValues.Any())
             {
                 bool first = true;
                 sb.Append("Semaphores: ");
 
-                foreach (InitialValueModel ivm in semaphores)
+                foreach (InitialValueModel ivm in SemaphoreValues)
                 {
                     if (!first)
                     {
@@ -322,7 +322,11 @@ namespace ThreadingSimulator.ViewModels
                 return;
             }
 
-            processPositions[logModel.Process]++;
+            if(log.Type!=LogType.DISPATCHER_SKIP)
+            {
+                processPositions[logModel.Process]++;
+            }
+
             DisplayColor(logModel.Process, processPositions[logModel.Process]);
         }
 
@@ -388,7 +392,10 @@ namespace ThreadingSimulator.ViewModels
                 return;
             }
 
-            processPositions[logModel.Process]--;
+            if (log.Type != LogType.DISPATCHER_SKIP)
+            {
+                processPositions[logModel.Process]--;
+            }
             DisplayColor(logModel.Process, processPositions[logModel.Process]);
         }
 
