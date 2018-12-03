@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace ThreadingSimulator.Models
     public class ExecutionSettingsModel : PropertyChangedImpl
     {
         private bool dispatcherEnabled = false;
-        public ObservableCollection<int> dispatcher = new ObservableCollection<int>();
+        private ObservableCollection<int> dispatcher = new ObservableCollection<int>();
 
         public List<InitialValueModel> Variables { get; set; } = new List<InitialValueModel>();
         public List<InitialValueModel> Semaphores { get; set; } = new List<InitialValueModel>();
@@ -30,6 +31,7 @@ namespace ThreadingSimulator.Models
             }
         }
 
+        [JsonProperty("dispatcher")]
         public ObservableCollection<int> Dispatcher
         {
             get

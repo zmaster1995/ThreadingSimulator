@@ -64,6 +64,7 @@ namespace ThreadingSimulator.ViewModels
                 OnPropertyChanged();
             }
         }
+
         public List<InitialValueModel> VariableValues
         {
             get
@@ -253,6 +254,18 @@ namespace ThreadingSimulator.ViewModels
             return sb.ToString();
         }
 
+        private void AddLog(BaseLogModel log)
+        {
+            if (log.Type == LogType.DEADLOCK || log.Type == LogType.ALL_SUSPENDED)
+            {
+                GenerateDeadlockLog();
+            }
+            else
+            {
+                GenerateLogOutput(log as LogModel);
+            }
+        }
+
         public void ExecuteCommand(BaseLogModel log)
         {
             LogModel logModel = log as LogModel;
@@ -264,15 +277,6 @@ namespace ThreadingSimulator.ViewModels
                 Focus(logModel.Process);
             }
 
-            if (log.Type == LogType.DEADLOCK || log.Type == LogType.ALL_SUSPENDED)
-            {
-                GenerateDeadlockLog();
-            }
-            else
-            {
-                GenerateLogOutput(logModel);
-            }
-
             if (log.Type == LogType.SET_VALUE)
             {
                 valuedLog = log as VariableLogModel;
@@ -282,6 +286,7 @@ namespace ThreadingSimulator.ViewModels
                 variable.Value = valuedLog.Value;
 
                 VariableValues = VariableValues.ToList();
+                AddLog(log);
             }
             else if (log.Type == LogType.ENTER_REGION)
             {
@@ -291,6 +296,7 @@ namespace ThreadingSimulator.ViewModels
                 semaphore.Value--;
 
                 SemaphoreValues = SemaphoreValues.ToList();
+                AddLog(log);
             }
             else if (log.Type == LogType.EXIT_REGION)
             {
@@ -300,6 +306,7 @@ namespace ThreadingSimulator.ViewModels
                 semaphore.Value++;
 
                 SemaphoreValues = SemaphoreValues.ToList();
+                AddLog(log);
             }
             else if (log.Type == LogType.SUSPENDED)
             {
@@ -308,6 +315,7 @@ namespace ThreadingSimulator.ViewModels
                 IsSuspended[semaphoreLog.Process] = true;
                 IsSuspended = IsSuspended.ToArray();
 
+                AddLog(log);
                 return;
             }
             else if(log.Type == LogType.AWAKE_PROCESS)
@@ -315,10 +323,12 @@ namespace ThreadingSimulator.ViewModels
                 IsSuspended[logModel.Process] = false;
                 IsSuspended = IsSuspended.ToArray();
 
+                AddLog(log);
                 return;
             }
             else if(log.Type==LogType.DEADLOCK || log.Type == LogType.ALL_SUSPENDED)
             {
+                AddLog(log);
                 return;
             }
 

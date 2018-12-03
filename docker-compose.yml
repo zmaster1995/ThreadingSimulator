@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  threadingsimulatorserver:
+    image: ${DOCKER_REGISTRY}threadingsimulatorserver
+    build:
+      context: .
+      dockerfile: ThreadingSimulatorServer\Dockerfile

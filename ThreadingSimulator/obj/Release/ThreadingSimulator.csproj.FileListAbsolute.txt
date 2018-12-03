@@ -24,7 +24,6 @@ D:\Work In Progress\ThreadingSimulator\ThreadingSimulator\bin\Release\ro\Xceed.W
 D:\Work In Progress\ThreadingSimulator\ThreadingSimulator\bin\Release\ru\Xceed.Wpf.AvalonDock.resources.dll
 D:\Work In Progress\ThreadingSimulator\ThreadingSimulator\bin\Release\sv\Xceed.Wpf.AvalonDock.resources.dll
 D:\Work In Progress\ThreadingSimulator\ThreadingSimulator\bin\Release\zh-Hans\Xceed.Wpf.AvalonDock.resources.dll
-D:\Work In Progress\ThreadingSimulator\ThreadingSimulator\obj\Release\ThreadingSimulator.csprojAssemblyReference.cache
 D:\Work In Progress\ThreadingSimulator\ThreadingSimulator\obj\Release\Controls\DisplayCommandsUC.g.cs
 D:\Work In Progress\ThreadingSimulator\ThreadingSimulator\obj\Release\Controls\MainContentUC.g.cs
 D:\Work In Progress\ThreadingSimulator\ThreadingSimulator\obj\Release\Dialogs\ExecutionSetupDialog.g.cs

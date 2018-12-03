@@ -1,0 +1,5 @@
+D:\Work In Progress\ThreadingSimulator\ThreadingSimulatorServer
+--output-path=obj\Release\netcoreapp2.0\
+--application-name=ThreadingSimulatorServer
+--content-root=D:\Work In Progress\ThreadingSimulator\ThreadingSimulatorServer
+--file=
