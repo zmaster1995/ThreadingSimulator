@@ -1,0 +1,82 @@
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+.gu-mirror .blockType,.gu-transit .blockType
+{
+    visibility: collapse;
+    display: none !important;
+}
+
+.gu-mirror block,.gu-transit block
+{
+    visibility: visible !important;
+}
+
+body
+{
+    margin: 0 8px !important;
+    overflow: hidden !important;
+}
+
+.mat-dialog-actions
+{
+    display: inherit !important;
+    margin-top: 10px;
+}
+
+.mat-horizontal-stepper-header
+{
+    pointer-events: none !important;
+}
+
+mat-expansion-panel
+{
+    box-shadow: none !important;
+}
+
+.mat-expansion-indicator
+{
+    visibility: collapse !important;
+}
+
+.ngx-contextmenu .dropdown-menu {
+    border: solid 1px #666666;
+    background-color: #EEEEEE;
+    padding: 0;
+}
+
+.ngx-contextmenu li {
+    display: block;
+    border-top: solid 1px #666666;
+    text-align: center;
+    text-decoration: none;
+}
+
+.ngx-contextmenu li:first-child {
+    border-top:none;
+}
+
+.ngx-contextmenu a {
+    color:#666666;
+    display: block;
+    padding: 0.5em 1em;
+}
+
+.smooth-dnd-container.horizontal
+{
+    height: 100%;
+}
+
+refresh-button {
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+       -khtml-user-select: none; /* Konqueror HTML */
+         -moz-user-select: none; /* Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome and Opera */
+}
+
+.dropTarget .blockType
+{
+    visibility: collapse;
+}

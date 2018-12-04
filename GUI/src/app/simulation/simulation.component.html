@@ -1,0 +1,59 @@
+<div style="width: 100%; height: 5%;">
+    <refresh-button [isEnabled]="StartAutoDisplayCmd_CanExecute.bind(this)" (click)="StartAutoDisplayCmd_Execute()" style="position:relative; top:7px; margin-left: 5px;" [text]="'Autorun'" [img]="'play_circle_filled'"></refresh-button>
+    <refresh-button [isEnabled]="PauseAutoDisplayCmd_CanExecute.bind(this)" (click)="PauseAutoDisplayCmd_Execute()" style="position:relative; top:7px; margin-left: 20px;" [text]="'Pause'" [img]="'pause_circle_filled'"></refresh-button>
+    <refresh-button [isEnabled]="PreviousLogCmd_CanExecute.bind(this)" (click)="PreviousLogCmd_Execute()" style="position:relative; top:7px; margin-left: 20px;" [text]="'Previous'" [img]="'skip_previous'"></refresh-button>
+    <refresh-button [isEnabled]="NextLogCmd_CanExecute.bind(this)" (click)="NextLogCmd_Execute()" style="position:relative; top:7px; margin-left: 20px;" [text]="'Next'" [img]="'skip_next'"></refresh-button>
+    <refresh-button [isEnabled]="ResetSimulationCmd_CanExecute.bind(this)" (click)="ResetSimulationCmd_Execute()" style="position:relative; top:7px; margin-left: 20px;" [text]="'Reset'" [img]="'settings_backup_restore'"></refresh-button>
+    <refresh-button (click)="NewSimulationCmd_Execute()" style="position:relative; top:7px; margin-left: 20px;" [text]="'Generate new scenario'" [img]="'autorenew'"></refresh-button>
+    <refresh-button (click)="ExportCmd_Execute()" style="position:relative; top:7px; margin-left: 20px;" [text]="'Export execution scenario'" [img]="'get_app'"></refresh-button>
+</div>
+
+<div style="height: 60vh; margin-top:5px">
+    <div style="width: 60%; max-width: 60%; overflow: auto; float: left; height: 100%; padding: 10px; display: flex;justify-content: center;align-items: center;">
+        <div style="height:98%; margin:auto; display: inline-block; width: 100%">
+            <preview #preview simulation="true" [processes]="ExecutableProgram.Processes" [processStatus]="IsSuspended"></preview>
+        </div>
+    </div>
+
+    <div style="width:30%; float: left; height: 100%; padding-top:30px; padding-left: 30px">
+        Variables:<br><br>
+        <div *ngFor="let value of VariableValues">
+            <span style="width:130px; display: inline-block">{{value.Name}}</span>{{value.Value}}
+        </div>
+        <br><br><br>
+        Semaphores:<br><br>
+        <div *ngFor="let value of SemaphoreValues">
+            <span style="width:130px; display: inline-block">{{value.Name}}</span>{{value.Value}}
+        </div>
+    </div>
+</div>
+
+<div style="width:100%; max-height: 27vh; clear:both; overflow: auto; margin-top: 50px">
+    <table mat-table [dataSource]="LogData" style="width: 99%; margin-left: 5px; box-shadow: none;" class="mat-elevation-z8">
+
+      <ng-container matColumnDef="process">
+        <th mat-header-cell *matHeaderCellDef>Process</th>
+        <td mat-cell *matCellDef="let element" style="width:10%; border: none"> {{element.Process}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>Description</th>
+        <td mat-cell *matCellDef="let element" style="width:30%; border: none"> {{element.Description}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="states">
+        <th mat-header-cell *matHeaderCellDef>Variable states</th>
+        <td mat-cell *matCellDef="let element" style="width:60%; border: none"> {{element.States}} </td>
+      </ng-container>
+  
+        <tr mat-header-row *matHeaderRowDef="displayedColumns" style="height: 28px"></tr>
+        <tr class="row" mat-row *matRowDef="let row; columns: displayedColumns;" style="height: 22px"></tr>
+  </table>
+</div>
+
+<ngx-spinner
+bdColor = "rgba(51, 51, 51, 0.8)"
+size = "large"
+color = "#fff"
+type = "timer"
+></ngx-spinner>

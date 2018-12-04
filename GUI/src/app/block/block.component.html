@@ -1,0 +1,43 @@
+<div *ngIf="Block.Type==0" [ngClass]="{'first': Index==0, 'last': Index==Length-1}" class="block semaphore" style="width: 260px">
+  Semaphore:
+  <input [ngClass]="{'disabled':!EditMode}"  type="text" [(ngModel)]="Block.SemaphorName" style="width:50px; margin-left: 10px">
+
+  <select [ngClass]="{'disabled':!EditMode}" [(ngModel)]="Block.SemaphorOperation" style="width:60px; margin-left: 10px">
+    <option *ngFor="let op of SemaphoreOperations" [ngValue]="op.Val">{{op.Name}}</option>
+  </select>
+
+  <refresh-button (click)="deleteThis()" style="float: right; position: relative; top: -3px" *ngIf="EditMode" [img]="'delete'"></refresh-button>
+</div>
+<div *ngIf="Block.Type==1" [ngClass]="{'first': Index==0, 'last': Index==Length-1, 'varSmaller': Block.VariableOperationType==0, 'varBigger': Block.VariableOperationType!=0}" class="block variable">
+  Variable: 
+  <input [ngClass]="{'disabled':!EditMode}" type="text" [(ngModel)]="Block.VariableName" style="width:50px; margin-left: 10px">
+  
+  <select [ngClass]="{'disabled':!EditMode}" [(ngModel)]="Block.VariableOperationType" style="width:85px; margin-left: 10px">
+    <option *ngFor="let op of variableOperations" [ngValue]="op.Val">{{op.Name}}</option>
+  </select>
+
+  <span *ngIf="Block.VariableOperationType==1" style="margin-left:5px;">by</span>
+  <span *ngIf="Block.VariableOperationType==2||Block.VariableOperationType==3" style="margin-left:5px;">to</span>
+
+  <input *ngIf="Block.VariableOperationType!=0" [ngClass]="{'disabled':!EditMode}" type="number" [(ngModel)]="Block.Value" style="margin-left:10px; width: 50px">
+  
+  <refresh-button (click)="deleteThis()" style="float: right; position: relative; top: -3px" *ngIf="EditMode" [img]="'delete'"></refresh-button>
+</div>
+<div *ngIf="Block.Type==2" [ngClass]="{'first': Index==0, 'last': Index==Length-1}" class="block other" style="width: 180px;">
+  Block of commands
+  <refresh-button (click)="deleteThis()" style="float: right; position: relative; top: -3px" *ngIf="EditMode" [img]="'delete'"></refresh-button>
+</div>
+<div *ngIf="Block.Type==3" [ngClass]="{'first': Index==0, 'last': Index==Length-1}" class="block loop" style="min-width: 210px; display: flow-root">
+  <span style="margin-left: 20px">Iterations:</span>
+  <input [ngClass]="{'disabled':!EditMode}" type="number" min="1" [(ngModel)]="Block.Iterations" style="margin-left:10px; width: 50px">
+
+  <refresh-button (click)="deleteThis()" style="float: right; position: relative; top: -3px" *ngIf="EditMode" [img]="'delete'"></refresh-button>
+  <br><br>
+  <div id="loopContainer" *ngIf="!EditMode">
+    <block *ngFor="let block of Block.Children; let ind = index" [array]="Block.Children" (arrayChange)="Block.Children=$event" [edit]="EditMode" [val]="block" [index]="ind" [length]="Block.Children.length"></block>
+  </div>
+  <div (drop)="dropped($event)" *ngIf="EditMode" id="loopContainer" ngxDroppable class="dropTarget" style="min-height: 30px" [model]="Block.Children" dropZone="blocks">
+    <block ngxDraggable [model]="block" *ngFor="let block of Block.Children; let ind = index" [array]="Block.Children" (arrayChange)="Block.Children=$event" [edit]="EditMode" [val]="block" [index]="ind" [length]="Block.Children.length"></block>
+  </div>
+</div>
+<div *ngIf="Block.Type==3" class="loopAfter"></div>

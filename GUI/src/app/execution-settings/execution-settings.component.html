@@ -1,0 +1,25 @@
+<mat-expansion-panel>
+  <mat-expansion-panel-header (click)="toggle()">
+    <mat-panel-title>
+      <mat-icon style="position: relative; top:-3px; margin-right: 10px;">{{Icon  ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</mat-icon>
+      Preview
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+  <div style="display: flex;justify-content: center;align-items: center;">
+    <div style="height:200px; margin:auto; display: inline-block;">
+      <preview [processes]="ExecutableProgram.Processes"></preview>
+    </div>
+  </div>
+</mat-expansion-panel>
+
+<settings #settings [program]="Program" [settings]="Settings"></settings>
+
+<br style="clear: both">
+<refresh-button (click)="run()" style="position:relative; top:50px; width: 100px; margin-left: calc(50% - 75px)" [text]="'Simulate'" [img]="'play_circle_filled'"></refresh-button>
+
+<ngx-spinner
+bdColor = "rgba(51, 51, 51, 0.8)"
+size = "large"
+color = "#fff"
+type = "timer"
+></ngx-spinner>

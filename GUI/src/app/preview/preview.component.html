@@ -1,0 +1,9 @@
+<div style="width: 100%; overflow: auto; height: -webkit-fill-available;">
+    <div class="process" *ngFor="let process of Processes; let ind = index" style="display: table-cell; width: 235px; max-width: 235px; min-width: 235px; position: relative; left: -10px">
+        &nbsp;&nbsp;&nbsp;&nbsp;Name: {{process.Name}}
+        <br><br>
+        <div *ngFor="let command of process.Commands" class="command" [ngClass]="{ 'command0': (!isSimulation && command.Type==0) || (isSimulation && command.DisplayColor && processStatus[ind]), 'command1': !isSimulation && command.Type==1, 'command2': !isSimulation && command.Type==2, 'command3': !isSimulation && command.Type==3, 'command4': !isSimulation && command.Type==4, 'command5': !isSimulation && command.Type==5, 'command6': (!isSimulation && command.Type==6) || (isSimulation && command.DisplayColor && !processStatus[ind]), 'commandBlur': isSimulation && !command.DisplayColor}">
+            {{getText(command)}}
+        </div>
+    </div>
+</div>

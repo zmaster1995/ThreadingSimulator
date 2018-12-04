@@ -1,0 +1,59 @@
+<span>Predefined examples:</span> 
+<refresh-button (click)="addNew()" style="position:relative; top:7px; margin-left:20px" [isEnabled]="isNotEditMode.bind(this)" [img]="'add_circle'"></refresh-button>
+<refresh-button (click)="edit()" style="position:relative; top:7px; margin-left:10px" [isEnabled]="isEditEnabled.bind(this)" [img]="'border_color'"></refresh-button>
+
+<refresh-button (click)="cancel()" style="position:relative; top:7px; float: right; margin-left:10px" *ngIf="EditMode" [img]="'cancel'"></refresh-button>
+<refresh-button (click)="save()" style="position:relative; top:7px; float: right; margin-left:10px" [isEnabled]="isValid.bind(this)" *ngIf="EditMode" [img]="'save'"></refresh-button>
+<refresh-button (click)="preview(content)" [isEnabled]="isValid.bind(this)"s style="position:relative; top:7px; float: right; margin-left:10px" *ngIf="SelectedProgram" [text]="'Preview processes'" [img]="'remove_red_eye'"></refresh-button>
+<refresh-button (click)="run()" style="position:relative; top:7px; float: right" *ngIf="SelectedProgram && !EditMode" [text]="'Run'" [img]="'play_circle_filled'"></refresh-button>
+<br style="clear: both">
+<ul id="grouplist" style="margin-top:15px" [ngClass]="{'disabled': EditMode}">
+  <li [ngClass]="{'active': SelectedProgram == program}" (click)="listClick($event, program)" *ngFor="let program of Programs">
+    <span>{{program.Name}}</span> <refresh-button style="float:right; margin-top:-5px;" (click)="delete(program)" [img]="'delete'"></refresh-button>
+  </li>
+</ul>
+
+<div id="content" #toScroll>
+  <div *ngIf="SelectedProgram" style="padding-top:20px">
+    <span style="position: relative; top:-20px">
+      <span>Name: </span><span *ngIf="!EditMode" class="inputText">{{SelectedProgram.Name}}</span><input class="inputText" style="z-index: 1000" *ngIf="EditMode" [(ngModel)]="SelectedProgram.Name" type="text">
+    </span>
+    <br><br>
+    <div style="margin-top:20px">
+      <div *ngFor="let process of SelectedProgram.Processes" [ngStyle]="{'position': EditMode ? 'relative' : 'inherit'}" style="top:-60px; display: table-cell; min-width:300px; height: 60vh;">
+        <span>Process name: </span><span *ngIf="!EditMode" class="inputText">{{process.Name}}</span><input class="inputText" *ngIf="EditMode" [(ngModel)]="process.Name" type="text">
+        <refresh-button (click)="deleteProcess(process)" style="float: right; position:relative; top:-2px" *ngIf="EditMode" [img]="'delete'"></refresh-button>
+        <br><br>
+        <div (drop)="dropped($event, process)" *ngIf="EditMode" ngxDroppable class="dropTarget" [model]="process.Blocks" dropZone="blocks" style="min-height: 300px">
+            <block ngxDraggable [model]="block" *ngFor="let block of process.Blocks; let ind = index" [array]="process.Blocks" (arrayChange)="process.Blocks=$event" [edit]="EditMode" [val]="block" [index]="ind" [length]="process.Blocks.length"></block>
+          </div>
+          <div *ngIf="!EditMode">
+            <block *ngFor="let block of process.Blocks; let ind = index" [array]="process.Blocks" (arrayChange)="process.Blocks=$event" [edit]="EditMode" [val]="block" [index]="ind" [length]="process.Blocks.length"></block>
+          </div>
+      </div>
+      <refresh-button (click)="addNewProcess()" style="display: table-cell; width: 10vw; height: 10vw; position: relative; top:150px" [size]="'80'" *ngIf="EditMode" [img]="'add_circle'"></refresh-button>
+    </div>
+  </div>
+</div>
+<div id="contanerDragFrom" *ngIf="EditMode" [model]="BlockInstances" ngxDroppable [copy]="true" style="margin-top:10px"> 
+  <div *ngFor="let block of BlockInstances" class="blockTypeParent" style="display: block" ngxDraggable [model]="block" [dropZones]="['blocks']">
+    <block [val]="block" index="0" length="1"></block>
+    <div [class]="'block'+block.Type+' blockType'" style="padding: 10px 15px; border-radius: 10px; width:17%; float: left; text-align: center; margin: 0 2.5%">
+        <span *ngIf="block.Type==0">Semaphore</span>
+        <span *ngIf="block.Type==1">Shared variable</span>
+        <span *ngIf="block.Type==2">Block of commands</span>
+        <span *ngIf="block.Type==3">Loop</span>
+    </div>
+  </div>
+</div>
+
+<div style="clear:both; position: relative; top:-20px">
+  <refresh-button (click)="Import()" text="Import" style="position:relative; top:7px;" [isEnabled]="isNotEditMode.bind(this)" [img]="'cloud_upload'"></refresh-button>
+  <refresh-button (click)="Export()" text="Export examples" style="position:relative; top:7px; margin-left:20px" [isEnabled]="isNotEditMode.bind(this)" [img]="'cloud_download'"></refresh-button>
+</div>
+
+<br style="clear: both;">
+<span style="position: relative; top:-20px" *ngIf="EditMode">Current mode: Edit</span>
+<span style="position: relative; top:-20px" *ngIf="!EditMode">Current mode: Normal</span>
+
+<input #fileDialog type="file" accept=".json" (change)="readFromFile()" hidden/>

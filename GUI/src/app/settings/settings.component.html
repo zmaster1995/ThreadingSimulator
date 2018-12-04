@@ -1,0 +1,59 @@
+<div style="background-color: #DDDDDD; padding-top: 10px; margin-bottom: 15px">
+  <div style="width: 25%; margin-left: 12.5%; float: left">
+    Threads:<br>
+    <div *ngFor="let process of Processes" style="padding:5px 0">
+      <span style="width: calc(80% - 70px); display: inline-block">{{process.Name}}</span> <input min="1" (change)="threadCountChanged()" [max]="process.Value + 8 - CurrentMax"  type="number" [(ngModel)]="process.Value" style="width:50px; margin-left: 10px">
+    </div>
+  </div>
+  <div style="width: 25%; float: left">
+    Semaphores:<br>
+    <div *ngFor="let sem of Settings.Semaphores" style="padding:5px 0">
+      <span style="width: calc(80% - 70px); display: inline-block">{{sem.Name}}</span> <input min="0"  type="number" [(ngModel)]="sem.Value" style="width:50px; margin-left: 10px">
+    </div>
+  </div>
+  <div style="width: 25%; float: left">
+    Variables:<br>
+    <div *ngFor="let variable of Settings.Variables" style="padding:5px 0">
+      <span style="width: calc(80% - 70px); display: inline-block">{{variable.Name}}</span> <input type="number" [(ngModel)]="variable.Value" style="width:50px; margin-left: 10px">
+    </div>
+  </div> 
+  <br style="clear: both"> 
+</div>
+
+<input type="radio" [checked]="!Settings.DispatcherEnabled" (change)="dispacherChanged()"> Auto dispatcher
+<input type="radio" [checked]="Settings.DispatcherEnabled" (change)="dispacherChanged()" style="margin-left: 10px;"> Controlled dispatcher
+
+<div *ngIf="Settings.DispatcherEnabled" style="padding-top: 10px; white-space: nowrap">  
+  <smooth-dnd-container style="display: inline-block; width:32%; position: relative; top:-12px" [orientation]="'horizontal'" groupName="1" behaviour="copy" [getChildPayload]="getSource.bind(this)">            
+    <smooth-dnd-draggable *ngFor="let num of ThreadNumbers">
+      <div class="draggable-item-horizontal copy" style="border:1px solid black; background-color: #DDDDDD; padding: 5px; display: inline-block">
+        {{num}}
+      </div>
+    </smooth-dnd-draggable>
+  </smooth-dnd-container>
+
+  <div style="width:33%; display: inline-block">
+    <input type="text" [(ngModel)]="Text" style="width: 100%"><br>
+    <refresh-button (click)="inputScenario()" [img]="'arrow_downward'" style="margin-left: calc(40% - 12px)"></refresh-button>
+    <refresh-button (click)="outputScenario()" [img]="'arrow_upward'" style="margin-left: calc(20% - 12px)"></refresh-button>
+  </div>
+
+  <div style="width:32%; display: inline-block">
+    <refresh-button (click)="importFromFile()" [text]="'Import'" [img]="'get_app'" style="margin-left: calc(20% - 12px); position: relative; top:-12px; left: 30%"></refresh-button>
+  </div>
+
+  <smooth-dnd-container (drop)="onDrop($event)" [getChildPayload]="getTarget.bind(this)" groupName="1" style="background: #DDDDDD; height: 47px; overflow-x: auto; position: relative; top:15px; white-space: nowrap; display: block" [orientation]="'horizontal'">            
+    <smooth-dnd-draggable *ngFor="let num of Settings.Dispatcher; let ind = index">
+      <div [contextMenu]="basicMenu" [contextMenuSubject]="ind" class="draggable-item-horizontal" style="border:1px solid black; background-color: #DDDDDD; padding: 5px; display: inline-block">
+        {{num}}
+      </div>
+    </smooth-dnd-draggable>
+  </smooth-dnd-container>
+</div>
+
+<input #fileDialog type="file" accept=".disp" (change)="readFromFile()" hidden/>
+<context-menu #basicMenu>
+  <ng-template contextMenuItem (execute)="deleteFromMenu($event.item)">
+    Delete
+  </ng-template>
+</context-menu>

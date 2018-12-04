@@ -1,0 +1,27 @@
+.command
+{
+    width: 90%;
+    margin-left: 5%;
+    border-radius: 10px;
+    padding: 5px 10px;
+}
+
+.command0, .command1
+{
+    background-color: #C0392B
+}
+
+.command2, .command3, .command4, .command5
+{
+    background-color: #2980B9
+}
+
+.command6
+{
+    background-color: #27AE60; 
+}
+
+.commandBlur
+{
+    background-color: #AAAAAA;
+}

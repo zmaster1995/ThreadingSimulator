@@ -1,0 +1,89 @@
+.active
+{
+    font-weight: bold;
+}
+
+#grouplist
+{
+    height: 80vh;
+    width: 15%;
+    border: 1px solid gray;
+    padding: 10px 5px;
+    list-style-type: none;
+    overflow-y: auto;
+    float:left;
+}
+
+#content
+{
+    width:82%; 
+    float: left;
+    margin-top:5px;
+    padding:10px;
+    height: 77vh;
+    overflow: auto;
+}
+
+#contanerDragFrom
+{
+    width:80%; 
+    float: left;
+}
+
+#grouplist li
+{
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+#grouplist li span
+{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 80%;
+    display: inline-block;
+}
+
+.disabled
+{
+    opacity: 0.2;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.inputText
+{
+    width:130px;
+}
+
+.block0
+{
+    background-color: #C0392B; 
+}
+
+.block1
+{
+    background-color: #2980B9
+}
+
+.block2
+{
+    background-color: #27AE60; 
+}
+
+.block3
+{
+    background-color: #8E44AD;
+}
+  
+block
+{
+    display: table;
+    widows: 0;
+}
+
+.blockTypeParent block
+{
+    visibility: collapse;
+}

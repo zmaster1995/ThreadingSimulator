@@ -1,0 +1,104 @@
+.block
+{
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    padding: 10px;
+    padding-top: 20px;
+}
+
+.first
+{
+    border-top-left-radius: 10px;
+}
+
+.last
+{
+    border-bottom-left-radius: 10px;
+}
+
+#loopContainer
+{
+    background-color: white;
+    margin-left: 10px;
+    border-radius: 10px;
+    padding: 2px;
+    position: relative;
+    left: 15px; 
+}
+
+.disabled
+{
+    opacity: 0.2;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.varSmaller
+{
+    width: 270px;
+}
+
+.varBigger
+{
+    width: 350px;
+}
+
+.loop, .loopAfter
+{
+    background-color: #8E44AD;
+}
+
+.semaphore, .semaphore::after
+{
+    background-color: #C0392B; 
+}
+
+.variable, .variable::after
+{
+    background-color: #2980B9
+}
+
+.other, .other::after
+{
+    background-color: #27AE60; 
+}
+
+.block:not(.loop)::after
+{
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    content: '__';
+    float: left;
+    position: relative;
+    top: 25px;
+    color: rgba(0, 0, 0, 0);
+}
+
+.loopAfter
+{
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    content: '__';
+    color: rgba(0, 0, 0, 0);
+    left: 11px;
+    position: absolute;
+    margin-top: -5px;
+}
+
+.variable::after 
+{
+    top: 27px;
+}
+
+.semaphore::after 
+{
+    top: 26px;
+}
+  
+block
+{
+    display: table;
+    widows: 0;
+}

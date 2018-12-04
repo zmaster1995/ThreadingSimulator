@@ -1,0 +1,13 @@
+<div>
+  <h2 mat-dialog-title>Preview</h2>
+  <hr>
+  <mat-dialog-content>
+    <div style="max-height: 700px">
+      <preview [processes]="ExecutableProgram.Processes"></preview>
+    </div>
+  </mat-dialog-content>
+  <hr>
+  <mat-dialog-actions>
+    <button style="float: right;" mat-raised-button (click)="onCloseCancel()">Close</button>
+  </mat-dialog-actions>
+</div>
