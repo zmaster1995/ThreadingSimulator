@@ -80,3 +80,8 @@ refresh-button {
 {
     visibility: collapse;
 }
+
+.dropTarget > .blockTypeParent:not(.gu-transit)
+{
+    display: none !important;
+}

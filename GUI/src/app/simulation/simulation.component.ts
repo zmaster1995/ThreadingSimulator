@@ -378,9 +378,9 @@ export class SimulationComponent {
       }
   }
 
-  private Focus(process: number, callback: any)
+  private Focus(process: number, undo: boolean, callback: any)
   {
-    this.preview.FocusCommand(process, this.processPositions[process], callback);
+    this.preview.FocusCommand(process, this.processPositions[process], undo, callback);
   }
 
   public ExecuteCommand(log: BaseLogModel)
@@ -397,7 +397,7 @@ export class SimulationComponent {
 
       if (logModel != null)
       {
-          this.Focus(logModel.Process, () => { setTimeout(() => {
+          this.Focus(logModel.Process, false, () => { setTimeout(() => {
             if (log.Type == LogType.SET_VALUE)
             {
                 valuedLog = <VariableLogModel>log;
@@ -492,7 +492,7 @@ export class SimulationComponent {
 
       if (logModel != null)
       {
-          this.Focus(logModel.Process, () => { setTimeout(() => {
+          this.Focus(logModel.Process, true, () => { setTimeout(() => {
             if (log.Type == LogType.SET_VALUE)
             {
                 valuedLog = <VariableLogModel>log;

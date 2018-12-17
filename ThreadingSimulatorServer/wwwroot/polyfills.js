@@ -5476,7 +5476,7 @@ if (typeof window['global'] === 'undefined') {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\Work In Progress\ThreadingSimulator\Angular\ThreadingSimulator\src\polyfills.ts */"./src/polyfills.ts");
+module.exports = __webpack_require__(/*! D:\GitHub\ThreadingSimulator\GUI\src\polyfills.ts */"./src/polyfills.ts");
 
 
 /***/ })

@@ -20,7 +20,7 @@
     </span>
     <br><br>
     <div style="margin-top:20px">
-      <div *ngFor="let process of SelectedProgram.Processes" [ngStyle]="{'position': EditMode ? 'relative' : 'inherit'}" style="top:-60px; display: table-cell; min-width:300px; height: 60vh;">
+      <div *ngFor="let process of SelectedProgram.Processes" [ngStyle]="{'top': !EditMode ? '5px' : '-60px'}" style="position: relative; display: table-cell; min-width:300px; height: 60vh;">
         <span>Process name: </span><span *ngIf="!EditMode" class="inputText">{{process.Name}}</span><input class="inputText" *ngIf="EditMode" [(ngModel)]="process.Name" type="text">
         <refresh-button (click)="deleteProcess(process)" style="float: right; position:relative; top:-2px" *ngIf="EditMode" [img]="'delete'"></refresh-button>
         <br><br>
@@ -36,9 +36,9 @@
   </div>
 </div>
 <div id="contanerDragFrom" *ngIf="EditMode" [model]="BlockInstances" ngxDroppable [copy]="true" style="margin-top:10px"> 
-  <div *ngFor="let block of BlockInstances" class="blockTypeParent" style="display: block" ngxDraggable [model]="block" [dropZones]="['blocks']">
+  <div *ngFor="let block of BlockInstances" class="blockTypeParent" style="display: inline-block; width: 15%; margin:0 4%" ngxDraggable [model]="block" [dropZones]="['blocks']">
     <block [val]="block" index="0" length="1"></block>
-    <div [class]="'block'+block.Type+' blockType'" style="padding: 10px 15px; border-radius: 10px; width:17%; float: left; text-align: center; margin: 0 2.5%">
+    <div [class]="'block'+block.Type+' blockType'" style="padding: 10px 15px; border-radius: 10px; width:100%; float: left; text-align: center; margin: 0 2.5%">
         <span *ngIf="block.Type==0">Semaphore</span>
         <span *ngIf="block.Type==1">Shared variable</span>
         <span *ngIf="block.Type==2">Block of commands</span>

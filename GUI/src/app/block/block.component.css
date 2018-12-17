@@ -33,6 +33,11 @@
     pointer-events: none;
 }
 
+.loop
+{
+    padding-bottom: 20px;
+}
+
 .varSmaller
 {
     width: 270px;
@@ -101,4 +106,43 @@ block
 {
     display: table;
     widows: 0;
+}
+
+@-moz-document url-prefix() {
+    .semaphore::after
+    {
+        margin-top:3px;
+        margin-left:-20px;
+    }
+
+    .semaphore.edit::after
+    {
+        margin-top:3px !important;
+    }
+
+    .variable::after
+    {
+        margin-top:3px;
+    }
+
+    .varBigger::after
+    {
+        margin-top:3px;
+    }
+
+    .varBigger.edit
+    {
+        padding-left: 30px !important;
+    }
+    
+    .semaphore
+    {
+        padding-left: 30px !important;
+    }
+
+    .varBigger.edit::after
+    {
+        margin-top: 3px !important;
+        margin-left: -20px !important;
+    }
 }

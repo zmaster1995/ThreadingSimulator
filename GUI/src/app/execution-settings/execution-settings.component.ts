@@ -43,8 +43,7 @@ export class ExecutionSettingsComponent {
 
       if(data)
       {
-        this.Settings = JSON.parse(data);
-        localStorage.set("SETTINGS_DATA_FOR_REGENERATE", data);
+        this.Settings = JSON.parse(data);;
       }
     }
     else
@@ -99,6 +98,11 @@ export class ExecutionSettingsComponent {
     this.spinner.show();
     this.SimulationExecProgram = this.DuplicateProcesses();
     
+    if(this.Settings)
+    {
+      this.localStorage.set("SETTINGS_DATA_FOR_REGENERATE", JSON.stringify(this.Settings));
+    }
+
     this.apiService.simulate({ Program: this.SimulationExecProgram, Settings: this.Settings}).subscribe(data => {
       this.Logs = Helper.DeserializeLogs(data);
   

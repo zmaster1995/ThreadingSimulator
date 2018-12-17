@@ -22,14 +22,18 @@ export class PreviewComponent {
     return Helper.GetText(command);
   }
 
-  public FocusCommand(processNo: number, commandNo: number, callback: any)
+  public FocusCommand(processNo: number, commandNo: number, undo: boolean, callback: any)
   {
+
     let commands: NodeListOf<Element> | HTMLCollectionOf<Element> = document.getElementsByClassName("process")[processNo].getElementsByClassName("command");
     
     if(commands.length>commandNo)
     {
       scrollIntoView(commands[commandNo], { time: 600 }, callback);
-      commands[commandNo].scrollIntoView(true);
+    }
+    else if(undo && commands.length==commandNo)
+    {
+      callback();
     }
   }
 }
